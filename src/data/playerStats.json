@@ -34,7 +34,7 @@
           "masteryLevel": 21
         }
       ],
-      "syncedAt": "2026-07-12T21:08:54.872Z"
+      "syncedAt": "2026-07-12T21:37:17.438Z"
     },
     "david": {
       "riotId": "Ruthless#LMAO",
@@ -77,7 +77,54 @@
           }
         }
       ],
-      "syncedAt": "2026-07-12T21:08:55.288Z"
+      "syncedAt": "2026-07-12T21:37:17.810Z"
+    },
+    "emil": {
+      "riotId": "VESDRAESTINATOR#EUW",
+      "platform": "euw1",
+      "level": 151,
+      "profileIcon": 0,
+      "rank": {
+        "tier": "SILVER",
+        "division": "II",
+        "lp": 62,
+        "wins": 6,
+        "losses": 11,
+        "queue": "SOLO"
+      },
+      "topChamps": [
+        {
+          "key": "Kled",
+          "name": "Kled",
+          "masteryPoints": 281426,
+          "masteryLevel": 27,
+          "recent": {
+            "games": 4,
+            "wins": 2
+          }
+        },
+        {
+          "key": "Neeko",
+          "name": "Neeko",
+          "masteryPoints": 199775,
+          "masteryLevel": 21,
+          "recent": {
+            "games": 3,
+            "wins": 1
+          }
+        },
+        {
+          "key": "Shaco",
+          "name": "Shaco",
+          "masteryPoints": 86995,
+          "masteryLevel": 11,
+          "recent": {
+            "games": 2,
+            "wins": 1
+          }
+        }
+      ],
+      "syncedAt": "2026-07-12T21:37:23.082Z"
     },
     "frode": {
       "riotId": "Frodević#EUW",
@@ -116,7 +163,7 @@
           }
         }
       ],
-      "syncedAt": "2026-07-12T21:08:55.673Z"
+      "syncedAt": "2026-07-12T21:37:23.518Z"
     },
     "isak": {
       "riotId": "Zliper#1590",
@@ -159,7 +206,7 @@
           "masteryLevel": 15
         }
       ],
-      "syncedAt": "2026-07-12T21:08:56.040Z"
+      "syncedAt": "2026-07-12T21:37:23.959Z"
     },
     "jacob": {
       "riotId": "OllePlockarN#EUW",
@@ -202,7 +249,7 @@
           }
         }
       ],
-      "syncedAt": "2026-07-12T21:08:56.429Z"
+      "syncedAt": "2026-07-12T21:37:24.383Z"
     },
     "jeppe": {
       "riotId": "Jopplahontas#EUW",
@@ -212,9 +259,9 @@
       "rank": {
         "tier": "PLATINUM",
         "division": "II",
-        "lp": 52,
+        "lp": 32,
         "wins": 43,
-        "losses": 48,
+        "losses": 49,
         "queue": "SOLO"
       },
       "topChamps": [
@@ -249,7 +296,7 @@
           }
         }
       ],
-      "syncedAt": "2026-07-12T21:08:56.987Z"
+      "syncedAt": "2026-07-12T21:37:24.879Z"
     },
     "noah": {
       "riotId": "bonkers#1111",
@@ -292,7 +339,42 @@
           "masteryLevel": 2
         }
       ],
-      "syncedAt": "2026-07-12T21:08:57.351Z"
+      "syncedAt": "2026-07-12T21:37:25.250Z"
+    },
+    "oscar": {
+      "riotId": "Hellworld#2025",
+      "platform": "euw1",
+      "level": 345,
+      "profileIcon": 6413,
+      "rank": {
+        "tier": "GOLD",
+        "division": "III",
+        "lp": 40,
+        "wins": 14,
+        "losses": 16,
+        "queue": "SOLO"
+      },
+      "topChamps": [
+        {
+          "key": "Rengar",
+          "name": "Rengar",
+          "masteryPoints": 409195,
+          "masteryLevel": 39
+        },
+        {
+          "key": "Twitch",
+          "name": "Twitch",
+          "masteryPoints": 199235,
+          "masteryLevel": 19
+        },
+        {
+          "key": "Mordekaiser",
+          "name": "Mordekaiser",
+          "masteryPoints": 110360,
+          "masteryLevel": 13
+        }
+      ],
+      "syncedAt": "2026-07-12T21:39:17.995Z"
     },
     "pippo": {
       "riotId": "DCG SuperPippo#DCG",
@@ -301,10 +383,10 @@
       "profileIcon": 4419,
       "rank": {
         "tier": "PLATINUM",
-        "division": "II",
-        "lp": 15,
+        "division": "III",
+        "lp": 96,
         "wins": 39,
-        "losses": 45,
+        "losses": 46,
         "queue": "SOLO"
       },
       "topChamps": [
@@ -327,7 +409,7 @@
           "masteryLevel": 10
         }
       ],
-      "syncedAt": "2026-07-12T21:08:57.705Z"
+      "syncedAt": "2026-07-12T21:39:18.407Z"
     },
     "thure": {
       "riotId": "rowex#036",
@@ -362,7 +444,7 @@
           "masteryLevel": 9
         }
       ],
-      "syncedAt": "2026-07-12T21:08:58.101Z"
+      "syncedAt": "2026-07-12T21:39:18.815Z"
     },
     "wille": {
       "riotId": "WallyWonky#EUW",
@@ -405,7 +487,7 @@
           "masteryLevel": 8
         }
       ],
-      "syncedAt": "2026-07-12T21:08:58.459Z"
+      "syncedAt": "2026-07-12T21:39:19.205Z"
     }
   }
 }

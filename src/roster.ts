@@ -34,6 +34,7 @@ export const ROSTER: Player[] = [
   { id: 'benne',   name: 'BENNE',   nickname: 'Certified Menace', img: '/roster/benne.png' ,   riotId: 'DCG Benne#Pung'},
   { id: 'damjan',  name: 'DAMJAN',  nickname: 'The Balkan Wall',  img: '/roster/damjan.png' },
   { id: 'david',   name: 'DAVID',   nickname: 'Silent Assassin',  img: '/roster/david.png' ,   riotId: 'Ruthless#LMAO'},
+  { id: 'emil',    name: 'EMIL',    nickname: 'Moustache Diff',   img: '/roster/emil.png',   riotId: 'VESDRAESTINATOR#EUW' },
   { id: 'frode',   name: 'FRODE',   nickname: 'Ganks Given: 0',   img: '/roster/frode.png' ,   riotId: 'Frodević#EUW'},
   { id: 'henke',   name: 'HENKE',   nickname: 'The Tilt Machine', img: '/roster/henke.png' },
   { id: 'isak',    name: 'ISAK',    nickname: 'Perma Flamed',     img: '/roster/isak.png',   riotId: 'Zliper#1590'},
@@ -43,11 +44,13 @@ export const ROSTER: Player[] = [
   { id: 'mcuz',    name: 'MCUZ',    nickname: 'Built Different',  img: '/roster/mcuz.png' },
   { id: 'mugge',   name: 'MUGGE',   nickname: 'The Inting Bear',  img: '/roster/mugge.png' },
   { id: 'noah',    name: 'NOAH',    nickname: 'Max Zoom Menace',  img: '/roster/noah.png',   riotId: 'bonkers#1111' },
+  { id: 'oscar',   name: 'OSCAR',   nickname: 'Blinked, Died',    img: '/roster/oscar.png',   riotId: 'Hellworld#2025' },
   { id: 'pippo',   name: 'PIPPO',   nickname: 'Smite Stealer',    img: '/roster/pippo.png',   riotId: 'DCG SuperPippo#DCG' },
-  { id: 'simon',   name: 'SIMON',   nickname: 'Wards? Never.',    img: '/roster/simon.png' },
+  { id: 'simon',   name: 'SIMON',   nickname: 'Wards? Never.',    img: '/roster/simon.png' ,   riotId: '⁦DCG Ramsö⁩#⁦111' },
   { id: 'thure',   name: 'THURE',   nickname: 'Shades On, Eyes Off', img: '/roster/thure.png',   riotId: 'rowex#036' },
   { id: 'wibring', name: 'WIBRING', nickname: 'The Final Boss',   img: '/roster/wibring.png' },
   { id: 'wille',   name: 'WILLE',   nickname: 'Deadpan Diff',     img: '/roster/wille.png',   riotId: 'WallyWonky#EUW' },
+  { id: 'andreas', name: 'ANDREAS', nickname: 'Sleepy discorder', img: '/roster/andreas.png',   riotId: 'Gúthwinë⁩#⁦6925' },
 
   // Alternate takes are already in public/roster/ if you prefer a different photo —
   // just point the img above at:  isak-alt.png / jeppe-alt.png / mcuz-alt.png / wibring-alt.png
