@@ -1,0 +1,102 @@
+/* ─────────────────────────────────────────────────────────────
+   Screen-level effects. Driven by classes/vars on <body> from
+   fx/screen.ts, not React state — these fire many times a second.
+   ───────────────────────────────────────────────────────────── */
+
+.fx-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+
+/* Film grain over everything — sells the grungy poster look. */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 45;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-shift 0.4s steps(3) infinite;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  33% { transform: translate(-2%, 1%); }
+  66% { transform: translate(1%, -2%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* White-out on impact. */
+.fx-flash {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  pointer-events: none;
+  background: #fff;
+  animation: flash-out linear forwards;
+}
+
+@keyframes flash-out {
+  0% { opacity: 0.92; }
+  100% { opacity: 0; }
+}
+
+/* RGB split. Cheap, reads as a hard camera hit. */
+.fx-aberrate .shake-root {
+  animation: aberrate 0.09s steps(2) infinite;
+}
+
+@keyframes aberrate {
+  0% {
+    filter: drop-shadow(3px 0 0 rgba(255, 0, 60, 0.65)) drop-shadow(-3px 0 0 rgba(0, 220, 255, 0.65));
+  }
+  100% {
+    filter: drop-shadow(-4px 0 0 rgba(255, 0, 60, 0.65)) drop-shadow(4px 0 0 rgba(0, 220, 255, 0.65));
+  }
+}
+
+/* Hitstop — the frame freezes and blows out. Reads as weight. */
+.fx-hitstop .shake-root {
+  filter: contrast(2.2) saturate(1.8) brightness(1.35);
+}
+
+/* SWAP curse strobe. */
+.fx-invert .shake-root {
+  animation: invert-strobe 0.14s steps(1) infinite;
+}
+
+@keyframes invert-strobe {
+  0%, 100% { filter: none; }
+  50% { filter: invert(1) hue-rotate(90deg); }
+}
+
+/* ── Keyframes used by components ───────────────────────────── */
+
+@keyframes aura-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.65; }
+  50% { transform: scale(1.12); opacity: 0.95; }
+}
+
+@keyframes vs-burn {
+  0% {
+    text-shadow: 0 0 20px #ff9d2f, 0 0 45px #ff4d15, 0 0 90px #ff2d00;
+    transform: rotate(-6deg) scale(1);
+  }
+  100% {
+    text-shadow: 0 0 30px #ffd23f, 0 0 65px #ff6a15, 0 0 120px #ff2d00;
+    transform: rotate(-6deg) scale(1.05);
+  }
+}
+
+/* Respect users who'd rather not be assaulted. */
+@media (prefers-reduced-motion: reduce) {
+  .grain,
+  .fx-aberrate .shake-root,
+  .fx-invert .shake-root,
+  .aura,
+  .vs {
+    animation: none !important;
+  }
+}

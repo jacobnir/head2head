@@ -1,0 +1,76 @@
+import type { Player } from './types'
+
+/**
+ * ─────────────────────────────────────────────────────────────
+ *  THE ONLY FILE YOU NEED TO EDIT
+ * ─────────────────────────────────────────────────────────────
+ *
+ *  To add a friend:
+ *    1. Drop their cutout PNG into  public/roster/  (e.g. public/roster/kalle.png)
+ *       Transparent background is ideal, but ANY amount of empty padding is fine —
+ *       the app auto-crops to the visible pixels at load time.
+ *    2. Add a line below.
+ *
+ *  `nickname` is optional. Leave it out and they get a random hype tag each roll.
+ *
+ *  ── LIVE STATS (rank, most-played champs, win rates) ─────────
+ *
+ *  `name` is the DISPLAY name on the fight card — keep it as the person's actual name.
+ *  `riotId` is their IN-GAME name, and it must include the tag:  GameName#TAG
+ *  (the new Riot ID format, not the old summoner name — it's top-right of their
+ *  profile in the client). Both get shown: big name, Riot ID underneath.
+ *
+ *    Then run:  npm run sync-stats
+ *
+ *  Entirely optional and per-player. Anyone without a `riotId` just shows the joke
+ *  stat bars instead — nothing breaks, they just have no live data.
+ *
+ *  Everyone defaults to EUW. If someone's on another server: platform: 'eun1'
+ *
+ *  The roster can hold as many people as you like — you pick exactly 10 per night.
+ */
+export const ROSTER: Player[] = [
+  { id: 'anton',   name: 'ANTON',   nickname: 'The Anvil',        img: '/roster/anton.png' },
+  { id: 'benne',   name: 'BENNE',   nickname: 'Certified Menace', img: '/roster/benne.png' ,   riotId: 'DCG Benne#Pung'},
+  { id: 'damjan',  name: 'DAMJAN',  nickname: 'The Balkan Wall',  img: '/roster/damjan.png' },
+  { id: 'david',   name: 'DAVID',   nickname: 'Silent Assassin',  img: '/roster/david.png' ,   riotId: 'Ruthless#LMAO'},
+  { id: 'frode',   name: 'FRODE',   nickname: 'Ganks Given: 0',   img: '/roster/frode.png' ,   riotId: 'Frodević#EUW'},
+  { id: 'henke',   name: 'HENKE',   nickname: 'The Tilt Machine', img: '/roster/henke.png' },
+  { id: 'isak',    name: 'ISAK',    nickname: 'Perma Flamed',     img: '/roster/isak.png',   riotId: 'Zliper#1590'},
+  { id: 'jacob',   name: 'JACOB',   nickname: 'The Architect',    img: '/roster/jacob.png',   riotId: 'OllePlockarN#EUW' },
+  { id: 'jeppe',   name: 'JEPPE',   nickname: 'Flash On D... ish',img: '/roster/jeppe.png' ,   riotId: 'Jopplahontas#EUW' },
+  { id: 'ludwig',  name: 'LUDWIG',  nickname: 'Mid Diff Enjoyer', img: '/roster/ludwig.png' },
+  { id: 'mcuz',    name: 'MCUZ',    nickname: 'Built Different',  img: '/roster/mcuz.png' },
+  { id: 'mugge',   name: 'MUGGE',   nickname: 'The Inting Bear',  img: '/roster/mugge.png' },
+  { id: 'noah',    name: 'NOAH',    nickname: 'Max Zoom Menace',  img: '/roster/noah.png',   riotId: 'bonkers#1111' },
+  { id: 'pippo',   name: 'PIPPO',   nickname: 'Smite Stealer',    img: '/roster/pippo.png',   riotId: 'DCG SuperPippo#DCG' },
+  { id: 'simon',   name: 'SIMON',   nickname: 'Wards? Never.',    img: '/roster/simon.png' },
+  { id: 'thure',   name: 'THURE',   nickname: 'Shades On, Eyes Off', img: '/roster/thure.png',   riotId: 'rowex#036' },
+  { id: 'wibring', name: 'WIBRING', nickname: 'The Final Boss',   img: '/roster/wibring.png' },
+  { id: 'wille',   name: 'WILLE',   nickname: 'Deadpan Diff',     img: '/roster/wille.png',   riotId: 'WallyWonky#EUW' },
+
+  // Alternate takes are already in public/roster/ if you prefer a different photo —
+  // just point the img above at:  isak-alt.png / jeppe-alt.png / mcuz-alt.png / wibring-alt.png
+]
+
+/** Used for anyone without a nickname, and for the extra stamped tag on the fight card. */
+export const HYPE_TAGS = [
+  'MID DIFF ENJOYER',
+  'PERMA TILTED',
+  '0/10 POWER SPIKE',
+  'GANK ANDY',
+  'FF@15 ADVOCATE',
+  'ALT-F4 SPECIALIST',
+  'CS: UNKNOWN',
+  'RUNS IT DOWN',
+  'MENTAL BOOM SPEEDRUN',
+  'HARD STUCK',
+  'FLASHES INTO WALLS',
+  'PINGS TWICE, DIES ONCE',
+  'BUILT LIKE A MINION',
+  'CHAT RESTRICTED',
+  'THE SCAPEGOAT',
+  'SMURF (ALLEGEDLY)',
+  'WILL BLAME JUNGLE',
+  'TOWER DIVE ENTHUSIAST',
+]
