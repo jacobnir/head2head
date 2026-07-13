@@ -7,6 +7,13 @@ Pick 10 friends → hit **FIGHT NIGHT** → faces rocket in from opposite corner
 mid-screen with explosions, screen shake and airhorns → ends on a fight card you can
 screenshot straight into Discord.
 
+![The fight card — the screen you paste into Discord](./screendump.png)
+
+Everything above the joke titles is real: the tier badges, the champion portraits and the
+win percentages are pulled from each player's actual Riot account. The per-lane split is
+the head-to-head rank gap; the bar at the top compares **average team rank**, so a strong
+player still counts for his side even when he's drawn against someone unranked.
+
 ## Run it
 
 ```bash
