@@ -34,7 +34,7 @@
           "masteryLevel": 21
         }
       ],
-      "syncedAt": "2026-07-12T21:37:17.438Z"
+      "syncedAt": "2026-07-12T23:21:46.393Z"
     },
     "david": {
       "riotId": "Ruthless#LMAO",
@@ -77,7 +77,7 @@
           }
         }
       ],
-      "syncedAt": "2026-07-12T21:37:17.810Z"
+      "syncedAt": "2026-07-12T23:21:46.800Z"
     },
     "emil": {
       "riotId": "VESDRAESTINATOR#EUW",
@@ -124,7 +124,7 @@
           }
         }
       ],
-      "syncedAt": "2026-07-12T21:37:23.082Z"
+      "syncedAt": "2026-07-12T23:21:47.187Z"
     },
     "frode": {
       "riotId": "Frodević#EUW",
@@ -163,7 +163,7 @@
           }
         }
       ],
-      "syncedAt": "2026-07-12T21:37:23.518Z"
+      "syncedAt": "2026-07-12T23:21:47.574Z"
     },
     "isak": {
       "riotId": "Zliper#1590",
@@ -206,7 +206,7 @@
           "masteryLevel": 15
         }
       ],
-      "syncedAt": "2026-07-12T21:37:23.959Z"
+      "syncedAt": "2026-07-12T23:21:47.959Z"
     },
     "jacob": {
       "riotId": "OllePlockarN#EUW",
@@ -249,7 +249,7 @@
           }
         }
       ],
-      "syncedAt": "2026-07-12T21:37:24.383Z"
+      "syncedAt": "2026-07-12T23:21:48.329Z"
     },
     "jeppe": {
       "riotId": "Jopplahontas#EUW",
@@ -296,7 +296,7 @@
           }
         }
       ],
-      "syncedAt": "2026-07-12T21:37:24.879Z"
+      "syncedAt": "2026-07-12T23:21:48.767Z"
     },
     "noah": {
       "riotId": "bonkers#1111",
@@ -339,7 +339,7 @@
           "masteryLevel": 2
         }
       ],
-      "syncedAt": "2026-07-12T21:37:25.250Z"
+      "syncedAt": "2026-07-12T23:21:49.175Z"
     },
     "oscar": {
       "riotId": "Hellworld#2025",
@@ -374,7 +374,7 @@
           "masteryLevel": 13
         }
       ],
-      "syncedAt": "2026-07-12T21:39:17.995Z"
+      "syncedAt": "2026-07-12T23:21:49.560Z"
     },
     "pippo": {
       "riotId": "DCG SuperPippo#DCG",
@@ -409,7 +409,50 @@
           "masteryLevel": 10
         }
       ],
-      "syncedAt": "2026-07-12T21:39:18.407Z"
+      "syncedAt": "2026-07-12T23:21:49.959Z"
+    },
+    "simon": {
+      "riotId": "DCG Ramsö#111",
+      "platform": "euw1",
+      "level": 598,
+      "profileIcon": 6557,
+      "rank": {
+        "tier": "GOLD",
+        "division": "IV",
+        "lp": 70,
+        "wins": 13,
+        "losses": 13,
+        "queue": "SOLO"
+      },
+      "topChamps": [
+        {
+          "key": "Thresh",
+          "name": "Thresh",
+          "masteryPoints": 325875,
+          "masteryLevel": 30,
+          "recent": {
+            "games": 1,
+            "wins": 0
+          }
+        },
+        {
+          "key": "Morgana",
+          "name": "Morgana",
+          "masteryPoints": 285074,
+          "masteryLevel": 27
+        },
+        {
+          "key": "AurelionSol",
+          "name": "Aurelion Sol",
+          "masteryPoints": 251444,
+          "masteryLevel": 25,
+          "recent": {
+            "games": 1,
+            "wins": 1
+          }
+        }
+      ],
+      "syncedAt": "2026-07-12T23:21:56.556Z"
     },
     "thure": {
       "riotId": "rowex#036",
@@ -444,7 +487,7 @@
           "masteryLevel": 9
         }
       ],
-      "syncedAt": "2026-07-12T21:39:18.815Z"
+      "syncedAt": "2026-07-12T23:21:56.946Z"
     },
     "wille": {
       "riotId": "WallyWonky#EUW",
@@ -487,7 +530,85 @@
           "masteryLevel": 8
         }
       ],
-      "syncedAt": "2026-07-12T21:39:19.205Z"
+      "syncedAt": "2026-07-12T23:21:57.344Z"
+    },
+    "andreas": {
+      "riotId": "Gúthwinë#6925",
+      "platform": "euw1",
+      "level": 371,
+      "profileIcon": 6489,
+      "rank": {
+        "tier": "SILVER",
+        "division": "IV",
+        "lp": 67,
+        "wins": 21,
+        "losses": 28,
+        "queue": "FLEX"
+      },
+      "topChamps": [
+        {
+          "key": "Xerath",
+          "name": "Xerath",
+          "masteryPoints": 250742,
+          "masteryLevel": 22,
+          "recent": {
+            "games": 2,
+            "wins": 2
+          }
+        },
+        {
+          "key": "Shen",
+          "name": "Shen",
+          "masteryPoints": 232175,
+          "masteryLevel": 22,
+          "recent": {
+            "games": 5,
+            "wins": 1
+          }
+        },
+        {
+          "key": "Jhin",
+          "name": "Jhin",
+          "masteryPoints": 188276,
+          "masteryLevel": 19
+        }
+      ],
+      "syncedAt": "2026-07-12T23:23:51.335Z"
+    },
+    "john": {
+      "riotId": "sneakytuetle#4889",
+      "platform": "euw1",
+      "level": 517,
+      "profileIcon": 3523,
+      "rank": {
+        "tier": "GOLD",
+        "division": "III",
+        "lp": 37,
+        "wins": 136,
+        "losses": 139,
+        "queue": "SOLO"
+      },
+      "topChamps": [
+        {
+          "key": "Viego",
+          "name": "Viego",
+          "masteryPoints": 166901,
+          "masteryLevel": 18
+        },
+        {
+          "key": "Thresh",
+          "name": "Thresh",
+          "masteryPoints": 146211,
+          "masteryLevel": 16
+        },
+        {
+          "key": "Sion",
+          "name": "Sion",
+          "masteryPoints": 123739,
+          "masteryLevel": 14
+        }
+      ],
+      "syncedAt": "2026-07-12T23:23:54.756Z"
     }
   }
 }

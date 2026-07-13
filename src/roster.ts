@@ -1,4 +1,11 @@
+import customPlayers from './data/customPlayers.json'
 import type { Player } from './types'
+
+/**
+ * Shown for anyone without a photo. Drop your own PNG at this path to change it —
+ * a transparent cutout works best, like the real faces.
+ */
+export const PLACEHOLDER_FACE = '/roster/_placeholder.png'
 
 /**
  * ─────────────────────────────────────────────────────────────
@@ -29,7 +36,7 @@ import type { Player } from './types'
  *
  *  The roster can hold as many people as you like — you pick exactly 10 per night.
  */
-export const ROSTER: Player[] = [
+const BUILT_IN: Player[] = [
   { id: 'anton',   name: 'ANTON',   nickname: 'The Anvil',        img: '/roster/anton.png' },
   { id: 'benne',   name: 'BENNE',   nickname: 'Certified Menace', img: '/roster/benne.png' ,   riotId: 'DCG Benne#Pung'},
   { id: 'damjan',  name: 'DAMJAN',  nickname: 'The Balkan Wall',  img: '/roster/damjan.png' },
@@ -46,14 +53,34 @@ export const ROSTER: Player[] = [
   { id: 'noah',    name: 'NOAH',    nickname: 'Max Zoom Menace',  img: '/roster/noah.png',   riotId: 'bonkers#1111' },
   { id: 'oscar',   name: 'OSCAR',   nickname: 'Blinked, Died',    img: '/roster/oscar.png',   riotId: 'Hellworld#2025' },
   { id: 'pippo',   name: 'PIPPO',   nickname: 'Smite Stealer',    img: '/roster/pippo.png',   riotId: 'DCG SuperPippo#DCG' },
-  { id: 'simon',   name: 'SIMON',   nickname: 'Wards? Never.',    img: '/roster/simon.png' ,   riotId: '⁦DCG Ramsö⁩#⁦111' },
+  { id: 'simon',   name: 'SIMON',   nickname: 'Wards? Never.',    img: '/roster/simon.png' ,   riotId: 'DCG Ramsö#111' },
   { id: 'thure',   name: 'THURE',   nickname: 'Shades On, Eyes Off', img: '/roster/thure.png',   riotId: 'rowex#036' },
   { id: 'wibring', name: 'WIBRING', nickname: 'The Final Boss',   img: '/roster/wibring.png' },
   { id: 'wille',   name: 'WILLE',   nickname: 'Deadpan Diff',     img: '/roster/wille.png',   riotId: 'WallyWonky#EUW' },
-  { id: 'andreas', name: 'ANDREAS', nickname: 'Sleepy discorder', img: '/roster/andreas.png',   riotId: 'Gúthwinë⁩#⁦6925' },
+  { id: 'andreas', name: 'ANDREAS', nickname: 'Sleepy discorder', img: '/roster/andreas.png',   riotId: 'Gúthwinë#6925' },
 
   // Alternate takes are already in public/roster/ if you prefer a different photo —
   // just point the img above at:  isak-alt.png / jeppe-alt.png / mcuz-alt.png / wibring-alt.png
+]
+
+/**
+ * Players added from the app's "+ ADD PLAYER" button.
+ *
+ * The dev server writes them to src/data/customPlayers.json rather than editing this
+ * file — generating code into a hand-maintained source is how you eventually eat
+ * someone's comments. They're first-class either way: `npm run sync-stats` bundles this
+ * module, so it sees them too.
+ *
+ * Anyone without a photo falls back to the placeholder.
+ */
+const CUSTOM: Player[] = (customPlayers as Player[]).map((p) => ({
+  ...p,
+  img: p.img || PLACEHOLDER_FACE,
+}))
+
+export const ROSTER: Player[] = [
+  ...BUILT_IN.map((p) => ({ ...p, img: p.img || PLACEHOLDER_FACE })),
+  ...CUSTOM,
 ]
 
 /** Used for anyone without a nickname, and for the extra stamped tag on the fight card. */

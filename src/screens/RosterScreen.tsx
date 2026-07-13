@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { AddPlayerModal } from '../components/AddPlayerModal'
 import { Face } from '../components/Face'
 import { tick } from '../lib/audio'
 import { REQUIRED_PLAYERS } from '../lib/randomize'
@@ -14,8 +15,16 @@ type Props = {
 
 export function RosterScreen({ selected, onToggle, onFight }: Props) {
   const [rejected, setRejected] = useState(false)
+  const [adding, setAdding] = useState(false)
   const count = selected.length
   const ready = count === REQUIRED_PLAYERS
+
+  // The dev server rewrites customPlayers.json; a reload is the simplest way to pick the
+  // new roster up, and Vite would HMR us anyway.
+  const onAdded = (note: string | null) => {
+    if (note) window.alert(`Player added.\n\n${note}`)
+    window.location.reload()
+  }
 
   const handleToggle = (id: string) => {
     const isSelected = selected.includes(id)
@@ -66,6 +75,11 @@ export function RosterScreen({ selected, onToggle, onFight }: Props) {
             </button>
           )
         })}
+
+        <button className="roster-card add-card" onClick={() => setAdding(true)} type="button">
+          <div className="add-plus">+</div>
+          <span className="roster-name">ADD PLAYER</span>
+        </button>
       </div>
 
       <footer className="roster-footer">
@@ -82,6 +96,8 @@ export function RosterScreen({ selected, onToggle, onFight }: Props) {
           <span className="fight-btn-inner">{ready ? 'FIGHT NIGHT' : `NEED ${REQUIRED_PLAYERS - count} MORE`}</span>
         </button>
       </footer>
+
+      <AddPlayerModal open={adding} onClose={() => setAdding(false)} onAdded={onAdded} />
     </div>
   )
 }

@@ -19,6 +19,8 @@
  *   --no-winrates   skip match-history crawling (much faster; drops champion win rates)
  *   --matches=N     how many recent matches to crawl per player (default 30)
  *   --force         ignore the local match cache
+ *   --only=a,b      sync just these player ids, MERGING into the existing stats file
+ *                   (used by the Add Player button — must not wipe everyone else)
  */
 
 import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises'
@@ -36,6 +38,12 @@ const WITH_WINRATES = !args.includes('--no-winrates')
 const FORCE = args.includes('--force')
 const DRY_RUN = args.includes('--dry-run')
 const MATCH_COUNT = Number(args.find((a) => a.startsWith('--matches='))?.split('=')[1] ?? 30)
+
+/** --only=jacob,emil → sync just those, and merge rather than overwrite. */
+const ONLY = (args.find((a) => a.startsWith('--only='))?.split('=')[1] ?? '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean)
 
 /** Regional routing for account-v1 + match-v5. EUW/EUNE both live under `europe`. */
 const REGIONAL = 'europe'
@@ -167,11 +175,12 @@ async function loadDDragon() {
   return { version, byId }
 }
 
-/* ── roster (bundle the TS so roster.ts stays the single source) ── */
+/* ── loading app source (bundle the TS so it stays the single source of truth) ── */
 
-async function loadRoster() {
+/** Bundle a TypeScript module and import it here in node. */
+async function loadTs(relPath) {
   const built = await esbuild.build({
-    entryPoints: [join(ROOT, 'src/roster.ts')],
+    entryPoints: [join(ROOT, relPath)],
     bundle: true,
     format: 'esm',
     platform: 'node',
@@ -179,7 +188,12 @@ async function loadRoster() {
     logLevel: 'silent',
   })
   const code = built.outputFiles[0].text
-  const mod = await import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`)
+  return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`)
+}
+
+/** roster.ts pulls in customPlayers.json, so UI-added players sync like any other. */
+async function loadRoster() {
+  const mod = await loadTs('src/roster.ts')
   return mod.ROSTER
 }
 
@@ -324,19 +338,14 @@ function checkDuplicates(withIds) {
 }
 
 /**
- * Invisible Unicode formatting characters — bidi isolates, zero-width spaces, BOM.
- *
- * The League client wraps Riot ID tags in LEFT-TO-RIGHT ISOLATE (U+2066) so they render
- * correctly next to right-to-left names. Copy a Riot ID out of the client and that
- * invisible character comes with it, producing "Name#⁦EUW" — which looks identical to
- * "Name#EUW" in an editor but 404s against the API forever.
- *
- * This strips ONLY the format category. Real letters stay: Frodević keeps his ć.
+ * Riot ID hygiene lives in src/lib/riotId.ts so the Add Player form and this script
+ * enforce identical rules — see the note there about U+2066 and the League client.
+ * Loaded via esbuild rather than duplicated.
  */
-const INVISIBLE = /[​-‏؜‪-‮⁦-⁩﻿]/g
+const { cleanRiotId: clean } = await loadTs('src/lib/riotId.ts')
 
 function cleanRiotId(raw) {
-  const cleaned = raw.replace(INVISIBLE, '').trim()
+  const cleaned = clean(raw)
   return { cleaned, hadInvisible: cleaned !== raw.trim() }
 }
 
@@ -385,7 +394,14 @@ async function main() {
     process.exit(1)
   }
 
-  const roster = await loadRoster()
+  const fullRoster = await loadRoster()
+
+  if (ONLY.length) {
+    const missing = ONLY.filter((id) => !fullRoster.some((p) => p.id === id))
+    if (missing.length) throw new Error(`unknown player id(s): ${missing.join(', ')}`)
+  }
+
+  const roster = ONLY.length ? fullRoster.filter((p) => ONLY.includes(p.id)) : fullRoster
   const withIds = roster.filter((p) => p.riotId)
   const without = roster.filter((p) => !p.riotId)
 
@@ -512,14 +528,45 @@ async function main() {
     }
   }
 
+  // A partial sync must MERGE — otherwise adding one player from the UI wipes everyone
+  // else's rank and champions.
+  //
+  // If the existing file can't be read, we ABORT rather than fall back to writing only
+  // what we just synced. That fallback used to exist and it destroyed 12 players' stats:
+  // a stray BOM made the file unparseable, the error was swallowed, and a one-player
+  // `--only` sync happily overwrote everything. A partial sync that has lost track of
+  // the other players must never be allowed to persist a subset.
+  let merged = players
+  if (ONLY.length && existsSync(OUT)) {
+    let prev
+    try {
+      // Tolerate a BOM — some editors and PowerShell add one, and it is not our problem.
+      const raw = (await readFile(OUT, 'utf8')).replace(/^﻿/, '')
+      prev = JSON.parse(raw)
+    } catch (e) {
+      throw new Error(
+        `Refusing to write.\n\n` +
+          `   --only=${ONLY.join(',')} is a PARTIAL sync, but the existing stats file could\n` +
+          `   not be parsed (${e.message}).\n\n` +
+          `   Writing now would replace every existing player with just the ${Object.keys(players).length} synced here.\n` +
+          `   Delete src/data/playerStats.json and run a full \`npm run sync-stats\` instead.`,
+      )
+    }
+    merged = { ...(prev.players ?? {}), ...players }
+  }
+
   await mkdir(dirname(OUT), { recursive: true })
   await writeFile(
     OUT,
-    JSON.stringify({ ddragonVersion: ddragon.version, players }, null, 2) + '\n',
+    JSON.stringify({ ddragonVersion: ddragon.version, players: merged }, null, 2) + '\n',
   )
 
   console.log(`\n   ${callCount} API calls`)
-  console.log(`   wrote ${Object.keys(players).length} players → src/data/playerStats.json`)
+  console.log(
+    `   wrote ${Object.keys(players).length} player(s)` +
+      (ONLY.length ? ` (merged into ${Object.keys(merged).length} total)` : '') +
+      ' → src/data/playerStats.json',
+  )
 
   if (scrubbed.length) {
     console.log(`\n   🧹 ${scrubbed.length} Riot ID(s) contained INVISIBLE characters and were cleaned:`)
