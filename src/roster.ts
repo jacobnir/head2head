@@ -1,5 +1,6 @@
 import customPlayers from './data/customPlayers.json'
-import type { Player } from './types'
+import playerOverrides from './data/playerOverrides.json'
+import type { Player, PlayerOverride } from './types'
 
 /**
  * Shown for anyone without a photo. Drop your own PNG at this path to change it —
@@ -73,15 +74,52 @@ const BUILT_IN: Player[] = [
  *
  * Anyone without a photo falls back to the placeholder.
  */
-const CUSTOM: Player[] = (customPlayers as Player[]).map((p) => ({
-  ...p,
-  img: p.img || PLACEHOLDER_FACE,
-}))
+const CUSTOM: Player[] = customPlayers as Player[]
 
-export const ROSTER: Player[] = [
-  ...BUILT_IN.map((p) => ({ ...p, img: p.img || PLACEHOLDER_FACE })),
-  ...CUSTOM,
-]
+/**
+ * Edits made from the roster screen (src/data/playerOverrides.json), applied on top of
+ * BOTH sources. Built-ins can't be edited in place — roster.ts is hand-maintained and we
+ * don't generate code into it — so an override layer is how a built-in gets a new photo,
+ * Riot ID or nickname.
+ *
+ * `null` means the field was explicitly cleared; `undefined` means it was never touched.
+ * That distinction is why this isn't a plain spread.
+ */
+const OVERRIDES = playerOverrides as Record<string, PlayerOverride>
+
+function applyOverride(p: Player): Player {
+  const o = OVERRIDES[p.id]
+  const merged: Player = { ...p }
+
+  if (o) {
+    if (o.name !== undefined) merged.name = o.name
+    if (o.nickname !== undefined) merged.nickname = o.nickname ?? undefined
+    if (o.img !== undefined) merged.img = o.img ?? ''
+    if (o.riotId !== undefined) merged.riotId = o.riotId ?? undefined
+    if (o.platform !== undefined) merged.platform = o.platform ?? undefined
+  }
+
+  // Anyone with no photo — never had one, or had it cleared — gets the placeholder.
+  if (!merged.img) merged.img = PLACEHOLDER_FACE
+  return merged
+}
+
+const ALL: Player[] = [...BUILT_IN, ...CUSTOM].map(applyOverride)
+
+/** Everyone who shows up on the roster screen. */
+export const ROSTER: Player[] = ALL.filter((p) => !OVERRIDES[p.id]?.hidden)
+
+/**
+ * Built-in players that have been "deleted" from the UI. They can't be removed for real
+ * — roster.ts declares them — so they're hidden, and the roster screen lists them so a
+ * mis-click isn't a one-way door.
+ */
+export const HIDDEN: Player[] = ALL.filter((p) => OVERRIDES[p.id]?.hidden)
+
+/** True when the player came from customPlayers.json rather than the built-in array. */
+export function isCustom(id: string): boolean {
+  return CUSTOM.some((p) => p.id === id)
+}
 
 /** Used for anyone without a nickname, and for the extra stamped tag on the fight card. */
 export const HYPE_TAGS = [

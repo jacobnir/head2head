@@ -1,0 +1,140 @@
+{
+  "anton": {
+    "name": "ANTON",
+    "nickname": "The Anvil",
+    "riotId": null,
+    "platform": null,
+    "img": "/roster/anton.png?v=1783971715306"
+  },
+  "benne": {
+    "name": "BENNE",
+    "nickname": "Rage baited",
+    "riotId": "DCG Benne#Pung",
+    "platform": null,
+    "img": "/roster/benne.png?v=1783971722089"
+  },
+  "damjan": {
+    "name": "DAMJAN",
+    "nickname": "The Balkan Wall",
+    "riotId": null,
+    "platform": null,
+    "img": "/roster/damjan.png?v=1783971727114"
+  },
+  "david": {
+    "name": "DAVID",
+    "nickname": "Rocket league enthusiast",
+    "riotId": "Ruthless#LMAO",
+    "platform": null,
+    "img": "/roster/david.png?v=1783971732054"
+  },
+  "frode": {
+    "name": "FRODE",
+    "nickname": "Ganks Given: 0",
+    "riotId": "Frodević#EUW",
+    "platform": null,
+    "img": "/roster/frode.png?v=1783971736467"
+  },
+  "henke": {
+    "name": "HENKE",
+    "nickname": "The Tilt Machine",
+    "riotId": null,
+    "platform": null,
+    "img": "/roster/henke.png?v=1783971741579"
+  },
+  "isak": {
+    "name": "ISAK",
+    "nickname": "Target banned",
+    "riotId": "Zliper#1590",
+    "platform": null,
+    "img": "/roster/isak.png?v=1783971747347"
+  },
+  "jacob": {
+    "name": "JACOB",
+    "nickname": "The carry",
+    "riotId": "OllePlockarN#EUW",
+    "platform": null,
+    "img": "/roster/jacob.png?v=1783971754052"
+  },
+  "jeppe": {
+    "name": "JEPPE",
+    "nickname": "FF and play left 4 dead",
+    "riotId": "Jopplahontas#EUW",
+    "platform": null,
+    "img": "/roster/jeppe.png?v=1783971764545"
+  },
+  "ludwig": {
+    "name": "LUDWIG",
+    "nickname": "Mid Diff Enjoyer",
+    "riotId": null,
+    "platform": null,
+    "img": "/roster/ludwig.png?v=1783971770005"
+  },
+  "mcuz": {
+    "name": "MCUZ",
+    "nickname": "Cheek spreader",
+    "riotId": null,
+    "platform": null,
+    "img": "/roster/mcuz.png?v=1783971775118"
+  },
+  "mugge": {
+    "name": "MUGGE",
+    "nickname": "The Inting Bear",
+    "riotId": null,
+    "platform": null,
+    "img": "/roster/mugge.png?v=1783971781334"
+  },
+  "noah": {
+    "name": "NOAH",
+    "nickname": "Max Zoom Menace",
+    "riotId": "bonkers#1111",
+    "platform": null,
+    "img": "/roster/noah.png?v=1783971786773"
+  },
+  "pippo": {
+    "name": "PIPPO",
+    "nickname": "Smite Stealer",
+    "riotId": "DCG SuperPippo#DCG",
+    "platform": null,
+    "img": "/roster/pippo.png?v=1783971802019"
+  },
+  "simon": {
+    "name": "SIMON",
+    "nickname": "LBGTQ+",
+    "riotId": "DCG Ramsö#111",
+    "platform": null,
+    "img": "/roster/simon.png?v=1783971811219"
+  },
+  "thure": {
+    "name": "THURE",
+    "nickname": "The cock",
+    "riotId": "rowex#036",
+    "platform": null,
+    "img": "/roster/thure.png?v=1783971815570"
+  },
+  "wibring": {
+    "name": "WIBRING",
+    "nickname": "Zac my cock",
+    "riotId": null,
+    "platform": null,
+    "img": "/roster/wibring.png?v=1783971821630"
+  },
+  "wille": {
+    "name": "WILLE",
+    "nickname": "Godfarter",
+    "riotId": "WallyWonky#EUW",
+    "platform": null,
+    "img": "/roster/wille.png?v=1783971826257"
+  },
+  "oscar": {
+    "name": "OSCAR",
+    "nickname": "Homeless duuude",
+    "riotId": "Hellworld#2025",
+    "platform": null
+  },
+  "john": {
+    "name": "JOHN",
+    "nickname": "Femboy goooooner",
+    "riotId": "sneakytuetle#4889",
+    "platform": null
+  }
+}

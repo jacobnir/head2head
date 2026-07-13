@@ -1,16 +1,18 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { checkRiotId, slugify } from '../lib/riotId'
-import { PLACEHOLDER_FACE, ROSTER } from '../roster'
+import { isCustom, PLACEHOLDER_FACE, ROSTER } from '../roster'
 import { tick } from '../lib/audio'
+import type { Player } from '../types'
 
 type Props = {
-  open: boolean
+  /** null = closed. A Player = edit them. 'new' = add someone. */
+  target: Player | 'new' | null
   onClose: () => void
-  onAdded: (note: string | null) => void
+  onSaved: (note: string | null) => void
 }
 
-/** Downscale before we ship it over the wire — phone photos are enormous. */
+/** Downscale before shipping over the wire — phone photos are enormous. */
 const MAX_DIM = 900
 
 function readImage(file: File): Promise<string> {
@@ -31,7 +33,7 @@ function readImage(file: File): Promise<string> {
         const ctx = canvas.getContext('2d')
         if (!ctx) return reject(new Error('Canvas unavailable'))
 
-        // PNG, so transparency in a cutout survives.
+        // PNG, so a cutout's transparency survives.
         ctx.drawImage(img, 0, 0, w, h)
         resolve(canvas.toDataURL('image/png'))
       }
@@ -41,7 +43,10 @@ function readImage(file: File): Promise<string> {
   })
 }
 
-export function AddPlayerModal({ open, onClose, onAdded }: Props) {
+export function PlayerModal({ target, onClose, onSaved }: Props) {
+  const editing = target !== null && target !== 'new'
+  const player = editing ? (target as Player) : null
+
   const [name, setName] = useState('')
   const [nickname, setNickname] = useState('')
   const [riotId, setRiotId] = useState('')
@@ -50,29 +55,38 @@ export function AddPlayerModal({ open, onClose, onAdded }: Props) {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [dragging, setDragging] = useState(false)
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
-  const id = slugify(name)
-  const riot = checkRiotId(riotId)
-  const clash = id.length > 0 && ROSTER.some((p) => p.id === id)
-
-  const nameError = !name.trim() ? null : clash ? `${name.toUpperCase()} is already on the roster` : null
-  const riotError = riot.ok ? null : riot.reason
-  const canSubmit = Boolean(name.trim()) && !clash && riot.ok && !busy
-
-  const reset = () => {
-    setName('')
-    setNickname('')
-    setRiotId('')
-    setPlatform('euw1')
+  // Prefill when opening on an existing player; blank for a new one.
+  useEffect(() => {
+    if (target === null) return
+    setName(player?.name ?? '')
+    setNickname(player?.nickname ?? '')
+    setRiotId(player?.riotId ?? '')
+    setPlatform(player?.platform ?? 'euw1')
     setImageDataUrl(null)
     setError(null)
     setBusy(false)
-  }
+    setConfirmingDelete(false)
+  }, [target, player])
+
+  // On edit the id is FIXED — it keys their stats and their saved selection, so renaming
+  // someone must not re-slug them into a different person.
+  const id = player?.id ?? slugify(name)
+  const riot = checkRiotId(riotId)
+  const clash = !editing && id.length > 0 && ROSTER.some((p) => p.id === id)
+
+  const nameError = !name.trim()
+    ? null
+    : clash
+      ? `${name.toUpperCase()} is already on the roster`
+      : null
+  const riotError = riot.ok ? null : riot.reason
+  const canSubmit = Boolean(name.trim()) && !clash && riot.ok && !busy
 
   const close = () => {
     if (busy) return
-    reset()
     onClose()
   }
 
@@ -94,7 +108,7 @@ export function AddPlayerModal({ open, onClose, onAdded }: Props) {
 
     try {
       const res = await fetch('/api/roster', {
-        method: 'POST',
+        method: editing ? 'PUT' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id,
@@ -108,25 +122,67 @@ export function AddPlayerModal({ open, onClose, onAdded }: Props) {
       })
 
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error ?? 'Could not add player')
+      if (!res.ok) throw new Error(data.error ?? 'Could not save')
 
-      reset()
-      onAdded(data.syncNote ?? null)
+      onSaved(data.syncNote ?? null)
     } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Could not save'
       // The API only exists under `npm run dev` — say so rather than failing cryptically.
-      const msg = e instanceof Error ? e.message : 'Could not add player'
       setError(
         msg.includes('Failed to fetch') || msg.includes('NetworkError')
-          ? 'Adding players needs the dev server — run `npm run dev`'
+          ? 'Editing the roster needs the dev server — run `npm run dev`'
           : msg,
       )
       setBusy(false)
     }
   }
 
+  const remove = async () => {
+    if (!player) return
+    if (!confirmingDelete) {
+      // One click arms it, a second confirms — a mis-click shouldn't nuke anyone.
+      setConfirmingDelete(true)
+      window.setTimeout(() => setConfirmingDelete(false), 4000)
+      return
+    }
+
+    setBusy(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/roster', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: player.id }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Could not delete')
+
+      onSaved(
+        data.hidden
+          ? `${player.name} hidden.\n\nBuilt-in players are declared in roster.ts and can't be deleted outright — they're hidden instead. Restore them from the strip under the roster grid.`
+          : null,
+      )
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : 'Could not delete'
+      setError(
+        msg.includes('Failed to fetch') || msg.includes('NetworkError')
+          ? 'Editing the roster needs the dev server — run `npm run dev`'
+          : msg,
+      )
+      setBusy(false)
+      setConfirmingDelete(false)
+    }
+  }
+
+  const preview = imageDataUrl ?? player?.img ?? PLACEHOLDER_FACE
+  const hadRiotId = Boolean(player?.riotId)
+  const clearingRiotId = editing && hadRiotId && !riotId.trim()
+  // Only UI-added players can actually be removed; built-ins get hidden.
+  const isRemovable = editing && isCustom(player!.id)
+
   return (
     <AnimatePresence>
-      {open && (
+      {target !== null && (
         <motion.div
           className="modal-backdrop"
           initial={{ opacity: 0 }}
@@ -142,7 +198,7 @@ export function AddPlayerModal({ open, onClose, onAdded }: Props) {
             transition={{ type: 'spring', stiffness: 320, damping: 26 }}
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="modal-title">NEW CHALLENGER</h2>
+            <h2 className="modal-title">{editing ? `EDIT ${player!.name}` : 'NEW CHALLENGER'}</h2>
 
             <div className="modal-body">
               {/* ── Photo ─────────────────────────────────── */}
@@ -160,16 +216,13 @@ export function AddPlayerModal({ open, onClose, onAdded }: Props) {
                   void pickFile(e.dataTransfer.files[0])
                 }}
               >
-                <img
-                  className="drop-preview"
-                  src={imageDataUrl ?? PLACEHOLDER_FACE}
-                  alt=""
-                  draggable={false}
-                />
+                <img className="drop-preview" src={preview} alt="" draggable={false} />
                 <span className="drop-hint">
-                  {imageDataUrl ? 'CHANGE PHOTO' : 'DROP PHOTO / CLICK'}
+                  {imageDataUrl ? 'NEW PHOTO ✓' : editing ? 'REPLACE PHOTO' : 'DROP PHOTO / CLICK'}
                 </span>
-                {!imageDataUrl && <span className="drop-sub">optional — uses placeholder</span>}
+                <span className="drop-sub">
+                  {editing ? 'leave alone to keep current' : 'optional — uses placeholder'}
+                </span>
                 <input
                   ref={fileRef}
                   type="file"
@@ -198,7 +251,7 @@ export function AddPlayerModal({ open, onClose, onAdded }: Props) {
 
                 <label className="field">
                   <span className="field-label">
-                    RIOT ID <em>optional — for rank &amp; champs</em>
+                    RIOT ID <em>gamertag#tag — for rank &amp; champs</em>
                   </span>
                   <input
                     className={`input ${riotError ? 'bad' : ''}`}
@@ -209,6 +262,10 @@ export function AddPlayerModal({ open, onClose, onAdded }: Props) {
                   />
                   {riotError ? (
                     <span className="field-error">{riotError}</span>
+                  ) : clearingRiotId ? (
+                    <span className="field-warn">
+                      ⚠ clearing this wipes their rank &amp; champions
+                    </span>
                   ) : riot.ok && riot.cleaned ? (
                     // The League client hides bidi characters in the tag. Say what we did.
                     <span className="field-ok">✓ cleaned hidden characters from the paste</span>
@@ -218,7 +275,7 @@ export function AddPlayerModal({ open, onClose, onAdded }: Props) {
                 <div className="field-row">
                   <label className="field grow">
                     <span className="field-label">
-                      NICKNAME <em>optional</em>
+                      TITLE <em>optional</em>
                     </span>
                     <input
                       className="input"
@@ -248,11 +305,33 @@ export function AddPlayerModal({ open, onClose, onAdded }: Props) {
             {error && <p className="modal-error">{error}</p>}
 
             <div className="modal-actions">
+              {editing && (
+                <button
+                  className={`btn danger ${confirmingDelete ? 'armed' : ''}`}
+                  onClick={remove}
+                  type="button"
+                  disabled={busy}
+                  title={
+                    isRemovable
+                      ? 'Remove from the roster'
+                      : "Built-in player — this hides them (they're declared in roster.ts)"
+                  }
+                >
+                  {confirmingDelete
+                    ? 'CLICK AGAIN TO CONFIRM'
+                    : isRemovable
+                      ? 'DELETE'
+                      : 'HIDE'}
+                </button>
+              )}
+
+              <span className="modal-spacer" />
+
               <button className="btn ghost" onClick={close} type="button" disabled={busy}>
                 CANCEL
               </button>
               <button className="btn primary" onClick={submit} type="button" disabled={!canSubmit}>
-                {busy ? 'ADDING…' : 'ADD TO ROSTER'}
+                {busy ? 'SAVING…' : editing ? 'SAVE CHANGES' : 'ADD TO ROSTER'}
               </button>
             </div>
           </motion.div>

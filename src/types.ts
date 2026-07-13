@@ -14,6 +14,27 @@ export type Player = {
   platform?: string
 }
 
+/**
+ * An edit made from the app's roster screen, layered on top of a player.
+ *
+ * Built-in players live in the hand-edited array in roster.ts, and we never codegen into
+ * that file — so edits are stored separately and merged at import. `null` means the field
+ * was explicitly CLEARED (nickname removed, Riot ID unlinked); `undefined` means untouched.
+ */
+export type PlayerOverride = {
+  name?: string
+  nickname?: string | null
+  img?: string | null
+  riotId?: string | null
+  platform?: string | null
+  /**
+   * Built-in players can't be truly deleted — they're declared in roster.ts, which is
+   * hand-maintained. Deleting one hides it instead, and the roster screen offers a way
+   * to bring it back. (UI-added players are removed outright.)
+   */
+  hidden?: boolean
+}
+
 export const LANES = ['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT'] as const
 export type Lane = (typeof LANES)[number]
 
