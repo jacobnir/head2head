@@ -39,6 +39,15 @@ const FORCE = args.includes('--force')
 const DRY_RUN = args.includes('--dry-run')
 const MATCH_COUNT = Number(args.find((a) => a.startsWith('--matches='))?.split('=')[1] ?? 30)
 
+/**
+ * Merge results into the existing stats file instead of overwriting it. Any player who
+ * fails to fetch this run (Riot outage, transient error, a single bad account) KEEPS
+ * their previous rank rather than vanishing — the fallback the auto-sync on `npm run dev`
+ * relies on. `--only` implies this. Whole-roster overwrite is still the default for a
+ * manual `npm run sync-stats`.
+ */
+const MERGE = args.includes('--merge')
+
 /** --only=jacob,emil → sync just those, and merge rather than overwrite. */
 const ONLY = (args.find((a) => a.startsWith('--only='))?.split('=')[1] ?? '')
   .split(',')
@@ -537,7 +546,8 @@ async function main() {
   // `--only` sync happily overwrote everything. A partial sync that has lost track of
   // the other players must never be allowed to persist a subset.
   let merged = players
-  if (ONLY.length && existsSync(OUT)) {
+  if ((ONLY.length || MERGE) && existsSync(OUT)) {
+    const mode = ONLY.length ? `--only=${ONLY.join(',')}` : '--merge'
     let prev
     try {
       // Tolerate a BOM — some editors and PowerShell add one, and it is not our problem.
@@ -546,7 +556,7 @@ async function main() {
     } catch (e) {
       throw new Error(
         `Refusing to write.\n\n` +
-          `   --only=${ONLY.join(',')} is a PARTIAL sync, but the existing stats file could\n` +
+          `   ${mode} is a MERGING sync, but the existing stats file could\n` +
           `   not be parsed (${e.message}).\n\n` +
           `   Writing now would replace every existing player with just the ${Object.keys(players).length} synced here.\n` +
           `   Delete src/data/playerStats.json and run a full \`npm run sync-stats\` instead.`,
@@ -564,7 +574,7 @@ async function main() {
   console.log(`\n   ${callCount} API calls`)
   console.log(
     `   wrote ${Object.keys(players).length} player(s)` +
-      (ONLY.length ? ` (merged into ${Object.keys(merged).length} total)` : '') +
+      (ONLY.length || MERGE ? ` (merged into ${Object.keys(merged).length} total)` : '') +
       ' → src/data/playerStats.json',
   )
 

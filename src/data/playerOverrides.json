@@ -2,7 +2,7 @@
   "anton": {
     "name": "ANTON",
     "nickname": "The Anvil",
-    "riotId": null,
+    "riotId": "zazzzaz#EUW",
     "platform": null,
     "img": "/roster/anton.png?v=1783971715306"
   },
@@ -37,7 +37,7 @@
   "henke": {
     "name": "HENKE",
     "nickname": "The Tilt Machine",
-    "riotId": null,
+    "riotId": "Henke#2444",
     "platform": null,
     "img": "/roster/henke.png?v=1783971741579"
   },
@@ -64,7 +64,7 @@
   },
   "ludwig": {
     "name": "LUDWIG",
-    "nickname": "Mid Diff Enjoyer",
+    "nickname": "Horungen",
     "riotId": null,
     "platform": null,
     "img": "/roster/ludwig.png?v=1783971770005"
@@ -72,14 +72,14 @@
   "mcuz": {
     "name": "MCUZ",
     "nickname": "Cheek spreader",
-    "riotId": null,
+    "riotId": "DCG Makke#DCG",
     "platform": null,
     "img": "/roster/mcuz.png?v=1783971775118"
   },
   "mugge": {
     "name": "MUGGE",
     "nickname": "The Inting Bear",
-    "riotId": null,
+    "riotId": "Mungon#EUW",
     "platform": null,
     "img": "/roster/mugge.png?v=1783971781334"
   },
@@ -114,9 +114,9 @@
   "wibring": {
     "name": "WIBRING",
     "nickname": "Zac my cock",
-    "riotId": null,
+    "riotId": "My Ballzac#EUW",
     "platform": null,
-    "img": "/roster/wibring.png?v=1783971821630"
+    "img": "/roster/wibring.png?v=1785858416860"
   },
   "wille": {
     "name": "WILLE",

@@ -9,7 +9,9 @@ A local web app that randomizes League of Legends in-house customs: pick exactly
 ## Commands
 
 ```bash
-npm run dev            # the app (localhost:5173)
+npm run dev            # the app (localhost:5173). Kicks off a background stats sync on
+                       # launch so ranks are fresh; Vite starts immediately regardless.
+                       # `-- --no-sync` skips it, `-- --no-winrates` makes it fast.
 npm run build          # tsc -b && vite build
 npm run verify         # BOTH suites below — run this after touching randomize.ts or stats.ts
 npm run sync-stats     # pull live Riot data -> src/data/playerStats.json
@@ -27,7 +29,13 @@ npm run verify-ranks        # all 93 ladder rungs strictly ordered Iron IV -> Ch
 
 Sync flags: `--dry-run` (validate roster + Data Dragon, no key needed), `--no-winrates`
 (skip match crawling — much faster), `--only=id1,id2` (partial, merging sync),
-`--matches=N`, `--force`.
+`--merge` (full roster, but keep the previous entry for anyone who fails to fetch —
+this is what the `npm run dev` auto-sync uses so a Riot outage falls back to old ranks
+instead of dropping players), `--matches=N`, `--force`.
+
+The browser still **never** calls Riot at runtime — the auto-sync is a separate Node
+process (`scripts/dev.mjs`) that refreshes `playerStats.json`; the app only imports it.
+A total loss of connectivity fails the sync before it writes, leaving the file untouched.
 
 ## Architecture
 
