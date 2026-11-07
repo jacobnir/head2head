@@ -22,24 +22,39 @@ import { readPlayers } from './_store.js'
 const BATCH = 5 // players in flight at once: 10 calls, comfortably under 20/s
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
+async function livePlayers() {
+  const known = new Set(PLAYERS.map((p) => p.id))
+  return (await readPlayers()).filter((p) => p.riotId && !known.has(p.id))
+    .map(({ id, riotId, platform }) => ({ id, riotId, platform }))
+}
+
 async function everyone() {
   try {
-    const known = new Set(PLAYERS.map((p) => p.id))
-    const live = (await readPlayers()).filter((p) => p.riotId && !known.has(p.id))
-    return [...PLAYERS, ...live.map(({ id, riotId, platform }) => ({ id, riotId, platform }))]
+    return [...PLAYERS, ...await livePlayers()]
   } catch {
     return PLAYERS // Blob trouble must not take the built-in roster's ranks down with it
   }
 }
 
-export default async function handler(_req, res) {
+/**
+ * `?ids=a,b`: just those live-added players, on a short cache. The full list is cached for
+ * 10 minutes, so someone added a minute ago isn't in it yet; the page asks for them here.
+ * Only live-added ids are honoured, at most 10, so this can't be used to hammer Riot.
+ */
+async function requested(ids) {
+  const wanted = new Set(String(ids).split(',').map((s) => s.trim()).filter(Boolean).slice(0, 10))
+  return (await livePlayers()).filter((p) => wanted.has(p.id))
+}
+
+export default async function handler(req, res) {
   const key = process.env.RIOT_API_KEY?.trim()
   if (!key) {
     res.setHeader('Cache-Control', 'no-store')
     return res.status(503).json({ error: 'RIOT_API_KEY is not set on this deployment.' })
   }
 
-  const players = await everyone()
+  const subset = req.query?.ids !== undefined
+  const players = subset ? await requested(req.query.ids) : await everyone()
   const ranks = {}
   let failures = 0
   let rateLimited = false
@@ -57,6 +72,11 @@ export default async function handler(_req, res) {
   }
 
   const fetched = Object.keys(ranks).length
+  if (subset) {
+    // Unranked newcomers are a valid empty answer, not a failure.
+    res.setHeader('Cache-Control', failures ? 'no-store' : 's-maxage=120, stale-while-revalidate=600')
+    return res.status(200).json({ fetchedAt: new Date().toISOString(), ranks, failures, rateLimited })
+  }
   // A bad key or total outage: don't cache the failure for 10 minutes.
   res.setHeader('Cache-Control', fetched ? 's-maxage=600, stale-while-revalidate=3000' : 'no-store')
   res.status(fetched ? 200 : 502).json({ fetchedAt: new Date().toISOString(), ranks, failures, rateLimited })

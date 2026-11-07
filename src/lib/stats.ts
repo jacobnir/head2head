@@ -1,5 +1,5 @@
 import raw from '../data/playerStats.json'
-import { ROSTER } from '../roster'
+import { isLive, ROSTER } from '../roster'
 import type { ChampStat, Matchup, Player, PlayerStats, RankInfo, StatsFile } from '../types'
 
 /**
@@ -52,11 +52,18 @@ export function applyLiveRanks(ranks: Record<string, RankInfo | null>): number {
 export async function loadLiveRanks(timeoutMs = 8000): Promise<void> {
   const controller = new AbortController()
   const timer = window.setTimeout(() => controller.abort(), timeoutMs)
+  const get = async (url: string) => {
+    const res = await fetch(url, { signal: controller.signal })
+    if (!res.ok || !res.headers.get('content-type')?.includes('json')) return {}
+    return ((await res.json()) as { ranks?: Record<string, RankInfo | null> }).ranks ?? {}
+  }
   try {
-    const res = await fetch('/api/ranks', { signal: controller.signal })
-    if (!res.ok || !res.headers.get('content-type')?.includes('json')) return
-    const body = (await res.json()) as { ranks?: Record<string, RankInfo | null> }
-    if (body.ranks) applyLiveRanks(body.ranks)
+    const ranks = await get('/api/ranks')
+    applyLiveRanks(ranks)
+    // The full list is cached for 10 minutes, so anyone added on the site since then is
+    // missing from it. Ask for just them on the short-cached path.
+    const missing = ROSTER.filter((p) => isLive(p.id) && p.riotId && !(p.id in ranks)).map((p) => p.id).sort()
+    if (missing.length) applyLiveRanks(await get(`/api/ranks?ids=${missing.slice(0, 10).map(encodeURIComponent).join(',')}`))
   } catch {
     // Baked ranks it is.
   } finally {
