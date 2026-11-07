@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useReducer, useState } from 'react'
 import { FxCanvas } from './fx/FxCanvas'
 import { clearParticles } from './fx/particles'
 import { resetScreen } from './fx/screen'
 import { initAudio, isMuted, setMuted } from './lib/audio'
 import { randomize } from './lib/randomize'
+import { loadLiveRanks, RANKS_UPDATED } from './lib/stats'
 import { preloadFaces } from './lib/trimFace'
 import { ROSTER } from './roster'
 import { RevealScreen } from './screens/RevealScreen'
@@ -12,7 +13,9 @@ import { ScoreboardScreen } from './screens/ScoreboardScreen'
 import { ShuffleScreen } from './screens/ShuffleScreen'
 import type { MatchResult, Player } from './types'
 
-type Stage = 'ROSTER' | 'SHUFFLE' | 'REVEAL' | 'SCOREBOARD'
+const TournamentMode = lazy(() => import('./tournament/TournamentMode'))
+const LeagueMode = lazy(() => import('./league/LeagueMode'))
+type Stage = 'ROSTER' | 'SHUFFLE' | 'REVEAL' | 'SCOREBOARD' | 'TOURNAMENT' | 'LEAGUE'
 
 const STORAGE_KEY = 'fightnight.selected'
 
@@ -39,6 +42,15 @@ export default function App() {
   // Crop every face up front so no reveal ever pops in half-loaded.
   useEffect(() => {
     void preloadFaces(ROSTER.map((p) => p.img))
+  }, [])
+
+  // Hosted build only: pull live ranks from /api/ranks and re-render when they land.
+  // `npm run dev` gets fresh ranks from its own launch sync instead.
+  const [, rerender] = useReducer((n: number) => n + 1, 0)
+  useEffect(() => {
+    window.addEventListener(RANKS_UPDATED, rerender)
+    if (import.meta.env.PROD) void loadLiveRanks()
+    return () => window.removeEventListener(RANKS_UPDATED, rerender)
   }, [])
 
   useEffect(() => {
@@ -79,7 +91,15 @@ export default function App() {
     <div className="app">
       <div className="grain" />
       <div className="shake-root">
-        {stage === 'ROSTER' && <RosterScreen selected={selected} onToggle={toggle} onFight={startFight} />}
+        {stage === 'ROSTER' && <RosterScreen selected={selected} onToggle={toggle} onFight={startFight} onTournament={() => setStage('TOURNAMENT')} onLeague={() => setStage('LEAGUE')} />}
+
+        {stage === 'LEAGUE' && <Suspense fallback={<div className="tournament-loading">Loading points league…</div>}>
+          <LeagueMode initialSelected={selected} onExit={backToRoster} />
+        </Suspense>}
+
+        {stage === 'TOURNAMENT' && <Suspense fallback={<div className="tournament-loading">Loading tournament mode…</div>}>
+          <TournamentMode onExit={backToRoster} />
+        </Suspense>}
 
         {stage === 'SHUFFLE' && <ShuffleScreen players={fighters} onDone={() => setStage('REVEAL')} />}
 

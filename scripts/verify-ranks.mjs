@@ -5,7 +5,7 @@
  *
  *   npm run verify-ranks
  */
-import { rankScore, formatRank, shortRank } from '../tmp/stats.mjs'
+import { rankScore, formatRank, shortRank, statsFor, laneWinChance } from '../tmp/stats.mjs'
 
 const TIERS = ['IRON', 'BRONZE', 'SILVER', 'GOLD', 'PLATINUM', 'EMERALD', 'DIAMOND']
 const DIVS = ['IV', 'III', 'II', 'I']
@@ -22,6 +22,16 @@ for (const lp of [0, 300, 800]) ladder.push({ tier: 'GRANDMASTER', division: '',
 for (const lp of [0, 500, 1500]) ladder.push({ tier: 'CHALLENGER', division: '', lp, wins: 0, losses: 0 })
 
 const failures = []
+
+// Tournament snapshots freeze both real stats and the absence of stats. Casual players
+// still use the live file when the optional snapshot field is absent.
+const snapshot = { riotId: 'Test#EUW', platform: 'euw1', syncedAt: '2026-10-10T00:00:00Z', topChamps: [],
+  rank: { tier: 'GOLD', division: 'II', lp: 50, wins: 0, losses: 0, queue: 'SOLO' } }
+const savedPlayer = { id: 'snapshot-test', name: 'Test', img: '', statsSnapshot: snapshot }
+if (statsFor(savedPlayer) !== snapshot) failures.push('tournament stats snapshot was ignored')
+if (statsFor({ ...savedPlayer, statsSnapshot: null }) !== undefined) failures.push('missing tournament rank must remain missing')
+if (laneWinChance(savedPlayer, { ...savedPlayer, id: 'other' })?.bluePct !== 50) failures.push('snapshot ranks did not reach matchup projections')
+if (laneWinChance(savedPlayer, { ...savedPlayer, statsSnapshot: null }) !== null) failures.push('unranked snapshot must produce NO LINE')
 
 // 1. Strictly ascending all the way up.
 for (let i = 1; i < ladder.length; i++) {

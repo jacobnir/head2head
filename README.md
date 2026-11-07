@@ -1,9 +1,9 @@
-# 🥊 FIGHT NIGHT
+# 🥊 IN HOUSE
 
 A head-to-head randomizer for League of Legends in-house customs. Replaces the two
 wheels (teams + lanes) with one big red button and a boxing-promo reveal.
 
-Pick 10 friends → hit **FIGHT NIGHT** → faces rocket in from opposite corners, collide
+Pick 10 friends → hit **LET’S ROLL** → faces rocket in from opposite corners, collide
 mid-screen with explosions, screen shake and airhorns → ends on a fight card you can
 screenshot straight into Discord.
 
@@ -22,6 +22,54 @@ npm run dev
 ```
 
 Opens on http://localhost:5173. Screen-share it in Discord while you roll.
+
+## Tournament mode
+
+Click **♛ TOURNAMENT MODE** on the roster screen. The original ten-player In House
+flow, including rerolls and curses, works as before.
+
+1. **Pick your fighters.** Choose any number of five-player teams (at least two) and
+   select the participating faces. The character-select stage fills as players join.
+2. **Set the chaos and inspect the squads.** Choose manual, random, or
+   rank-balanced formation. Balanced teams use a snake draw; supply a strength estimate
+   for unranked players. Estimates never become displayed ranks. Adjust names, colours,
+   and lineups before starting; selecting an occupied player swaps the two slots.
+   Choose single or double elimination; **House rules & prize pool** contains role
+   overrides, BO1/BO3/BO5 rounds/finals, and the optional display-only prize total/currency.
+3. **Save the draft and enter pick’ems.** Add predictors by name. Champion picks lock when
+   the event starts. Individual series picks lock when that series' first game starts.
+   Correct series picks earn one point; the champion earns three. Ties share a place.
+4. **Start the event.** Teams and rules lock, and the opening ceremony reveals every team
+   and pairing. Space advances; Escape skips. Byes advance automatically without counting
+   as played wins or losses. Double elimination includes a grand-final reset if necessary.
+5. **Play each match.** Select a bracket card or use **Prepare match**. Choose roles or let
+   the app draw them within each fixed team, then start the game. Blue/red sides alternate
+   through a series. The saved assignment powers both the reveal and fight card. Champions
+   are selected in League; tournament games have no curses.
+6. **Record the winner.** Confirm each game result to update series scores, the bracket,
+   and predictions. Results are entered by the host; no live Riot calls are involved.
+   To correct an earlier game, undo later games and dependent matches first. Prediction
+   locks survive undo. The final winner gets the championship ceremony.
+
+Participating cutouts bounce into squad entrances and matchup posters, appear on bracket
+cards, and dance with crowns in the champion ceremony. Click a lineup head for a hype
+reaction, or **One more victory lap** for another celebration. **Pause antics** stops the
+idle animations; system reduced-motion preferences are respected. These effects never
+redraw teams or change saved roles or results.
+
+Events autosave in this browser under `fightnight.tournaments.v1`. Reopen Tournament Mode
+to resume. **Export** creates a JSON backup; **Import tournament** validates and restores
+it. Importing an existing event creates a separate copy. Portrait files are not embedded
+in exports, so another computer needs the same local roster images. Player names and
+stats are captured with the event and remain stable across roster edits and stats syncs.
+
+Unreadable saves are preserved: download the original from the recovery notice and import
+a valid backup. Recovery keeps a copy of the original in a separate local-storage entry.
+A second tab cannot silently overwrite a newer save; reload it before continuing.
+
+`npm run verify-tournament` bundles the real engine and tests full brackets at 2, 3, 4, 5,
+6, 8, 17, and 33 teams, including byes, resets, role assignments, corrections, predictions,
+and save recovery. It is included in `npm run verify` alongside the existing suites.
 
 ## Adding a friend
 
@@ -169,7 +217,7 @@ curse reconciles with the final card.)
 npm run verify
 ```
 
-Two suites:
+Three suites:
 
 - **`verify-randomizer`** — 20,000 rolls. Every player appears exactly once, teams are
   always 5v5, lanes always unique, distribution uniform, and every curse reconciles with
@@ -177,3 +225,5 @@ Two suites:
 - **`verify-ranks`** — walks all 93 rungs of the ladder from Iron IV to Challenger and
   asserts `rankScore()` is strictly ascending. (This caught a real bug: a 500 LP Master
   was outranking a Grandmaster, which would have silently inverted the odds.)
+- **`verify-tournament`** — simulates 192 complete brackets across eight team counts and
+  checks byes, double-elimination resets, series, roles, predictions, corrections, and saves.

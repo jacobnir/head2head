@@ -6,3 +6,6 @@ tmp
 .DS_Store
 *.local
 public/roster
+
+.vercel
+.env*

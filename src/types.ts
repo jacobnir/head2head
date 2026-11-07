@@ -12,6 +12,8 @@ export type Player = {
   riotId?: string
   /** Platform routing, e.g. 'euw1'. Defaults to DEFAULT_PLATFORM if omitted. */
   platform?: string
+  /** Tournament-only snapshot. null freezes the absence of stats; omission uses the live file. */
+  statsSnapshot?: PlayerStats | null
 }
 
 /**

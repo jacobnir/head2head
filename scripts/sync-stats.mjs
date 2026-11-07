@@ -3,7 +3,7 @@
  *
  *   npm run sync-stats
  *
- * Run this occasionally (not during a fight night). The app reads the resulting JSON —
+ * Run this occasionally (not mid-session). The app reads the resulting JSON —
  * it never calls Riot at runtime, so it needs no API key, has no latency mid-reveal,
  * and works offline while you're screen-sharing.
  *

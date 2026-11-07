@@ -1,60 +1,56 @@
 {
-  "ddragonVersion": "16.15.1",
+  "ddragonVersion": "16.22.1",
   "players": {
     "benne": {
       "riotId": "DCG Benne#Pung",
       "platform": "euw1",
-      "level": 678,
-      "profileIcon": 5992,
+      "level": 706,
+      "profileIcon": 7248,
       "rank": {
         "tier": "EMERALD",
-        "division": "III",
-        "lp": 51,
-        "wins": 146,
-        "losses": 145,
+        "division": "II",
+        "lp": 1,
+        "wins": 169,
+        "losses": 167,
         "queue": "SOLO"
       },
       "topChamps": [
         {
           "key": "Sett",
           "name": "Sett",
-          "masteryPoints": 350916,
-          "masteryLevel": 35
+          "masteryPoints": 371820,
+          "masteryLevel": 36
         },
         {
           "key": "Jhin",
           "name": "Jhin",
-          "masteryPoints": 266653,
-          "masteryLevel": 27,
+          "masteryPoints": 277209,
+          "masteryLevel": 28,
           "recent": {
-            "games": 2,
-            "wins": 1
+            "games": 1,
+            "wins": 0
           }
         },
         {
           "key": "Yasuo",
           "name": "Yasuo",
-          "masteryPoints": 253097,
-          "masteryLevel": 21,
-          "recent": {
-            "games": 1,
-            "wins": 1
-          }
+          "masteryPoints": 258168,
+          "masteryLevel": 23
         }
       ],
-      "syncedAt": "2026-08-07T21:49:04.692Z"
+      "syncedAt": "2026-11-07T11:33:24.837Z"
     },
     "david": {
       "riotId": "Ruthless#LMAO",
       "platform": "euw1",
-      "level": 805,
+      "level": 806,
       "profileIcon": 6334,
       "rank": {
         "tier": "EMERALD",
         "division": "IV",
-        "lp": 91,
-        "wins": 144,
-        "losses": 162,
+        "lp": 90,
+        "wins": 145,
+        "losses": 163,
         "queue": "SOLO"
       },
       "topChamps": [
@@ -62,11 +58,7 @@
           "key": "Akali",
           "name": "Akali",
           "masteryPoints": 1507831,
-          "masteryLevel": 140,
-          "recent": {
-            "games": 2,
-            "wins": 0
-          }
+          "masteryLevel": 140
         },
         {
           "key": "Gnar",
@@ -77,11 +69,15 @@
         {
           "key": "Fizz",
           "name": "Fizz",
-          "masteryPoints": 354232,
-          "masteryLevel": 35
+          "masteryPoints": 355024,
+          "masteryLevel": 35,
+          "recent": {
+            "games": 1,
+            "wins": 0
+          }
         }
       ],
-      "syncedAt": "2026-08-07T21:49:10.680Z"
+      "syncedAt": "2026-11-07T11:33:28.103Z"
     },
     "emil": {
       "riotId": "VESDRAESTINATOR#EUW",
@@ -92,8 +88,8 @@
         "tier": "PLATINUM",
         "division": "IV",
         "lp": 0,
-        "wins": 53,
-        "losses": 54,
+        "wins": 54,
+        "losses": 56,
         "queue": "SOLO"
       },
       "topChamps": [
@@ -106,11 +102,11 @@
         {
           "key": "Neeko",
           "name": "Neeko",
-          "masteryPoints": 268484,
+          "masteryPoints": 269374,
           "masteryLevel": 27,
           "recent": {
-            "games": 26,
-            "wins": 15
+            "games": 1,
+            "wins": 0
           }
         },
         {
@@ -120,207 +116,195 @@
           "masteryLevel": 11
         }
       ],
-      "syncedAt": "2026-08-07T21:50:59.507Z"
+      "syncedAt": "2026-11-07T11:33:29.136Z"
     },
     "frode": {
       "riotId": "Frodević#EUW",
       "platform": "euw1",
-      "level": 804,
-      "profileIcon": 3865,
+      "level": 823,
+      "profileIcon": 6399,
       "rank": {
         "tier": "EMERALD",
-        "division": "III",
-        "lp": 10,
-        "wins": 107,
-        "losses": 120,
+        "division": "II",
+        "lp": 50,
+        "wins": 163,
+        "losses": 171,
         "queue": "SOLO"
       },
       "topChamps": [
         {
           "key": "Azir",
           "name": "Azir",
-          "masteryPoints": 221367,
-          "masteryLevel": 23,
-          "recent": {
-            "games": 1,
-            "wins": 1
-          }
+          "masteryPoints": 229105,
+          "masteryLevel": 23
         },
         {
           "key": "MasterYi",
           "name": "Master Yi",
-          "masteryPoints": 209943,
-          "masteryLevel": 20
+          "masteryPoints": 212806,
+          "masteryLevel": 21
         },
         {
           "key": "Sion",
           "name": "Sion",
-          "masteryPoints": 200491,
-          "masteryLevel": 18
+          "masteryPoints": 202833,
+          "masteryLevel": 19
         }
       ],
-      "syncedAt": "2026-08-07T21:51:04.229Z"
+      "syncedAt": "2026-11-07T11:33:34.779Z"
     },
     "isak": {
       "riotId": "Zliper#1590",
       "platform": "euw1",
-      "level": 265,
+      "level": 274,
       "profileIcon": 539,
       "rank": {
         "tier": "SILVER",
-        "division": "III",
-        "lp": 11,
-        "wins": 2,
-        "losses": 3,
+        "division": "I",
+        "lp": 15,
+        "wins": 20,
+        "losses": 28,
         "queue": "SOLO"
       },
       "topChamps": [
         {
           "key": "Anivia",
           "name": "Anivia",
-          "masteryPoints": 912455,
-          "masteryLevel": 83,
+          "masteryPoints": 1006092,
+          "masteryLevel": 93,
           "recent": {
-            "games": 11,
-            "wins": 3
+            "games": 28,
+            "wins": 11
           }
         },
         {
           "key": "Tryndamere",
           "name": "Tryndamere",
-          "masteryPoints": 215343,
+          "masteryPoints": 216588,
           "masteryLevel": 19
         },
         {
           "key": "Amumu",
           "name": "Amumu",
-          "masteryPoints": 144905,
-          "masteryLevel": 15
+          "masteryPoints": 156027,
+          "masteryLevel": 16
         }
       ],
-      "syncedAt": "2026-08-07T21:51:10.941Z"
+      "syncedAt": "2026-11-07T11:35:23.943Z"
     },
     "jacob": {
       "riotId": "OllePlockarN#EUW",
       "platform": "euw1",
-      "level": 226,
-      "profileIcon": 937,
+      "level": 236,
+      "profileIcon": 6378,
       "rank": {
         "tier": "GOLD",
-        "division": "II",
-        "lp": 78,
-        "wins": 77,
-        "losses": 77,
+        "division": "III",
+        "lp": 61,
+        "wins": 94,
+        "losses": 100,
         "queue": "SOLO"
       },
       "topChamps": [
         {
           "key": "Lux",
           "name": "Lux",
-          "masteryPoints": 257402,
-          "masteryLevel": 26,
+          "masteryPoints": 273608,
+          "masteryLevel": 28,
           "recent": {
-            "games": 13,
-            "wins": 6
+            "games": 8,
+            "wins": 5
           }
         },
         {
           "key": "Vi",
           "name": "Vi",
-          "masteryPoints": 151702,
-          "masteryLevel": 13,
-          "recent": {
-            "games": 1,
-            "wins": 0
-          }
+          "masteryPoints": 153658,
+          "masteryLevel": 13
         },
         {
           "key": "Jinx",
           "name": "Jinx",
-          "masteryPoints": 139469,
-          "masteryLevel": 15,
+          "masteryPoints": 146498,
+          "masteryLevel": 16,
           "recent": {
-            "games": 2,
-            "wins": 1
+            "games": 3,
+            "wins": 2
           }
         }
       ],
-      "syncedAt": "2026-08-07T21:52:57.735Z"
+      "syncedAt": "2026-11-07T11:35:30.275Z"
     },
     "jeppe": {
       "riotId": "Jopplahontas#EUW",
       "platform": "euw1",
-      "level": 435,
+      "level": 456,
       "profileIcon": 980,
       "rank": {
         "tier": "PLATINUM",
-        "division": "II",
-        "lp": 35,
-        "wins": 58,
-        "losses": 65,
+        "division": "III",
+        "lp": 51,
+        "wins": 146,
+        "losses": 154,
         "queue": "SOLO"
       },
       "topChamps": [
         {
           "key": "Jinx",
           "name": "Jinx",
-          "masteryPoints": 631973,
-          "masteryLevel": 60,
-          "recent": {
-            "games": 7,
-            "wins": 4
-          }
+          "masteryPoints": 643306,
+          "masteryLevel": 61
         },
         {
           "key": "Caitlyn",
           "name": "Caitlyn",
-          "masteryPoints": 350646,
-          "masteryLevel": 35,
-          "recent": {
-            "games": 1,
-            "wins": 1
-          }
+          "masteryPoints": 378208,
+          "masteryLevel": 37
         },
         {
-          "key": "Jhin",
-          "name": "Jhin",
-          "masteryPoints": 228042,
-          "masteryLevel": 23
+          "key": "Zac",
+          "name": "Zac",
+          "masteryPoints": 261151,
+          "masteryLevel": 26,
+          "recent": {
+            "games": 15,
+            "wins": 11
+          }
         }
       ],
-      "syncedAt": "2026-08-07T21:53:03.535Z"
+      "syncedAt": "2026-11-07T11:35:34.960Z"
     },
     "noah": {
       "riotId": "bonkers#1111",
       "platform": "euw1",
-      "level": 40,
+      "level": 44,
       "profileIcon": 6498,
       "rank": {
         "tier": "GOLD",
         "division": "III",
-        "lp": 41,
-        "wins": 26,
-        "losses": 30,
+        "lp": 85,
+        "wins": 37,
+        "losses": 49,
         "queue": "SOLO"
       },
       "topChamps": [
         {
           "key": "Evelynn",
           "name": "Evelynn",
-          "masteryPoints": 52613,
-          "masteryLevel": 7,
+          "masteryPoints": 77957,
+          "masteryLevel": 10,
           "recent": {
-            "games": 25,
-            "wins": 14
+            "games": 17,
+            "wins": 6
           }
         },
         {
           "key": "Shaco",
           "name": "Shaco",
-          "masteryPoints": 20348,
-          "masteryLevel": 4,
+          "masteryPoints": 23274,
+          "masteryLevel": 5,
           "recent": {
-            "games": 2,
+            "games": 1,
             "wins": 1
           }
         },
@@ -331,7 +315,7 @@
           "masteryLevel": 3
         }
       ],
-      "syncedAt": "2026-08-07T21:55:02.189Z"
+      "syncedAt": "2026-11-07T11:37:29.512Z"
     },
     "oscar": {
       "riotId": "Hellworld#2025",
@@ -362,7 +346,7 @@
         {
           "key": "Mordekaiser",
           "name": "Mordekaiser",
-          "masteryPoints": 111061,
+          "masteryPoints": 111576,
           "masteryLevel": 13,
           "recent": {
             "games": 1,
@@ -370,19 +354,19 @@
           }
         }
       ],
-      "syncedAt": "2026-08-07T21:55:03.614Z"
+      "syncedAt": "2026-11-07T11:37:31.152Z"
     },
     "pippo": {
       "riotId": "DCG SuperPippo#DCG",
       "platform": "euw1",
-      "level": 279,
+      "level": 291,
       "profileIcon": 4419,
       "rank": {
         "tier": "EMERALD",
         "division": "IV",
-        "lp": 0,
-        "wins": 71,
-        "losses": 73,
+        "lp": 63,
+        "wins": 123,
+        "losses": 121,
         "queue": "SOLO"
       },
       "topChamps": [
@@ -401,11 +385,11 @@
         {
           "key": "Blitzcrank",
           "name": "Blitzcrank",
-          "masteryPoints": 117311,
-          "masteryLevel": 10
+          "masteryPoints": 118179,
+          "masteryLevel": 11
         }
       ],
-      "syncedAt": "2026-08-07T21:55:06.564Z"
+      "syncedAt": "2026-11-07T11:39:22.194Z"
     },
     "simon": {
       "riotId": "DCG Ramsö#111",
@@ -453,28 +437,32 @@
     "thure": {
       "riotId": "rowex#036",
       "platform": "euw1",
-      "level": 299,
+      "level": 308,
       "profileIcon": 1159,
       "rank": {
         "tier": "BRONZE",
-        "division": "III",
-        "lp": 25,
-        "wins": 74,
-        "losses": 80,
+        "division": "IV",
+        "lp": 82,
+        "wins": 91,
+        "losses": 96,
         "queue": "FLEX"
       },
       "topChamps": [
         {
           "key": "Yasuo",
           "name": "Yasuo",
-          "masteryPoints": 152838,
-          "masteryLevel": 12
+          "masteryPoints": 153826,
+          "masteryLevel": 13
         },
         {
           "key": "Jhin",
           "name": "Jhin",
-          "masteryPoints": 100250,
-          "masteryLevel": 10
+          "masteryPoints": 102007,
+          "masteryLevel": 10,
+          "recent": {
+            "games": 2,
+            "wins": 1
+          }
         },
         {
           "key": "Akali",
@@ -483,132 +471,132 @@
           "masteryLevel": 9
         }
       ],
-      "syncedAt": "2026-08-07T21:56:55.102Z"
+      "syncedAt": "2026-11-07T11:39:27.779Z"
     },
     "wille": {
       "riotId": "WallyWonky#EUW",
       "platform": "euw1",
-      "level": 137,
-      "profileIcon": 3380,
+      "level": 174,
+      "profileIcon": 7248,
       "rank": {
         "tier": "SILVER",
         "division": "III",
-        "lp": 30,
-        "wins": 65,
-        "losses": 71,
+        "lp": 75,
+        "wins": 69,
+        "losses": 73,
         "queue": "SOLO"
       },
       "topChamps": [
         {
           "key": "DrMundo",
           "name": "Dr. Mundo",
-          "masteryPoints": 124611,
-          "masteryLevel": 14,
-          "recent": {
-            "games": 1,
-            "wins": 1
-          }
+          "masteryPoints": 130669,
+          "masteryLevel": 15
         },
         {
           "key": "Lux",
           "name": "Lux",
-          "masteryPoints": 95118,
-          "masteryLevel": 11,
+          "masteryPoints": 110169,
+          "masteryLevel": 13,
           "recent": {
-            "games": 3,
-            "wins": 3
+            "games": 1,
+            "wins": 0
           }
         },
         {
-          "key": "Corki",
-          "name": "Corki",
-          "masteryPoints": 54452,
-          "masteryLevel": 8
+          "key": "Velkoz",
+          "name": "Vel'Koz",
+          "masteryPoints": 90140,
+          "masteryLevel": 11
         }
       ],
-      "syncedAt": "2026-08-07T21:56:58.415Z"
+      "syncedAt": "2026-11-07T11:39:30.505Z"
     },
     "andreas": {
       "riotId": "Gúthwinë#6925",
       "platform": "euw1",
-      "level": 375,
-      "profileIcon": 6489,
+      "level": 389,
+      "profileIcon": 7334,
       "rank": {
         "tier": "SILVER",
         "division": "II",
-        "lp": 39,
-        "wins": 32,
-        "losses": 31,
+        "lp": 56,
+        "wins": 50,
+        "losses": 50,
         "queue": "FLEX"
       },
       "topChamps": [
         {
           "key": "Xerath",
           "name": "Xerath",
-          "masteryPoints": 255203,
-          "masteryLevel": 22,
+          "masteryPoints": 264869,
+          "masteryLevel": 25,
           "recent": {
-            "games": 4,
-            "wins": 4
+            "games": 3,
+            "wins": 2
           }
         },
         {
           "key": "Shen",
           "name": "Shen",
-          "masteryPoints": 240002,
-          "masteryLevel": 23,
+          "masteryPoints": 260023,
+          "masteryLevel": 24,
           "recent": {
-            "games": 5,
-            "wins": 3
+            "games": 9,
+            "wins": 6
           }
         },
         {
           "key": "Jhin",
           "name": "Jhin",
-          "masteryPoints": 190995,
-          "masteryLevel": 19
+          "masteryPoints": 195502,
+          "masteryLevel": 20,
+          "recent": {
+            "games": 1,
+            "wins": 0
+          }
         }
       ],
-      "syncedAt": "2026-08-07T21:57:02.190Z"
+      "syncedAt": "2026-11-07T11:39:33.157Z"
     },
     "john": {
       "riotId": "sneakytuetle#4889",
       "platform": "euw1",
-      "level": 522,
-      "profileIcon": 3523,
+      "level": 559,
+      "profileIcon": 1384,
       "rank": {
-        "tier": "PLATINUM",
-        "division": "IV",
-        "lp": 21,
-        "wins": 170,
-        "losses": 164,
+        "tier": "GOLD",
+        "division": "I",
+        "lp": 76,
+        "wins": 224,
+        "losses": 219,
         "queue": "SOLO"
       },
       "topChamps": [
         {
           "key": "Viego",
           "name": "Viego",
-          "masteryPoints": 166901,
+          "masteryPoints": 170708,
           "masteryLevel": 18
         },
         {
           "key": "Thresh",
           "name": "Thresh",
-          "masteryPoints": 148204,
-          "masteryLevel": 16,
-          "recent": {
-            "games": 1,
-            "wins": 1
-          }
+          "masteryPoints": 152077,
+          "masteryLevel": 16
         },
         {
           "key": "Sion",
           "name": "Sion",
-          "masteryPoints": 123739,
-          "masteryLevel": 14
+          "masteryPoints": 131784,
+          "masteryLevel": 15,
+          "recent": {
+            "games": 1,
+            "wins": 0
+          }
         }
       ],
-      "syncedAt": "2026-08-07T21:57:05.433Z"
+      "syncedAt": "2026-11-07T11:39:36.134Z"
     },
     "henke": {
       "riotId": "Henke#2444",
@@ -620,11 +608,7 @@
           "key": "Urgot",
           "name": "Urgot",
           "masteryPoints": 333555,
-          "masteryLevel": 30,
-          "recent": {
-            "games": 6,
-            "wins": 4
-          }
+          "masteryLevel": 30
         },
         {
           "key": "Sion",
@@ -636,14 +620,10 @@
           "key": "Sett",
           "name": "Sett",
           "masteryPoints": 97058,
-          "masteryLevel": 11,
-          "recent": {
-            "games": 2,
-            "wins": 1
-          }
+          "masteryLevel": 11
         }
       ],
-      "syncedAt": "2026-08-07T21:51:10.298Z"
+      "syncedAt": "2026-11-07T11:35:19.144Z"
     },
     "anton": {
       "riotId": "zazzzaz#EUW",
@@ -691,49 +671,49 @@
     "mcuz": {
       "riotId": "DCG Makke#DCG",
       "platform": "euw1",
-      "level": 187,
-      "profileIcon": 5451,
+      "level": 194,
+      "profileIcon": 563,
       "rank": {
-        "tier": "BRONZE",
+        "tier": "SILVER",
         "division": "III",
-        "lp": 94,
-        "wins": 14,
-        "losses": 23,
-        "queue": "FLEX"
+        "lp": 55,
+        "wins": 3,
+        "losses": 2,
+        "queue": "SOLO"
       },
       "topChamps": [
         {
           "key": "Shen",
           "name": "Shen",
-          "masteryPoints": 163464,
-          "masteryLevel": 14,
+          "masteryPoints": 168213,
+          "masteryLevel": 15,
           "recent": {
-            "games": 2,
-            "wins": 0
-          }
-        },
-        {
-          "key": "Poppy",
-          "name": "Poppy",
-          "masteryPoints": 125060,
-          "masteryLevel": 12,
-          "recent": {
-            "games": 2,
+            "games": 1,
             "wins": 1
           }
         },
         {
           "key": "Leona",
           "name": "Leona",
-          "masteryPoints": 123023,
-          "masteryLevel": 11,
+          "masteryPoints": 138722,
+          "masteryLevel": 13,
           "recent": {
-            "games": 4,
+            "games": 6,
+            "wins": 3
+          }
+        },
+        {
+          "key": "Poppy",
+          "name": "Poppy",
+          "masteryPoints": 134683,
+          "masteryLevel": 14,
+          "recent": {
+            "games": 3,
             "wins": 3
           }
         }
       ],
-      "syncedAt": "2026-08-07T21:53:08.680Z"
+      "syncedAt": "2026-11-07T11:37:22.756Z"
     },
     "mugge": {
       "riotId": "Mungon#EUW",
@@ -745,21 +725,13 @@
           "key": "Yorick",
           "name": "Yorick",
           "masteryPoints": 250467,
-          "masteryLevel": 21,
-          "recent": {
-            "games": 2,
-            "wins": 2
-          }
+          "masteryLevel": 21
         },
         {
           "key": "Swain",
           "name": "Swain",
           "masteryPoints": 243093,
-          "masteryLevel": 20,
-          "recent": {
-            "games": 4,
-            "wins": 1
-          }
+          "masteryLevel": 20
         },
         {
           "key": "Viktor",
@@ -768,7 +740,7 @@
           "masteryLevel": 15
         }
       ],
-      "syncedAt": "2026-08-07T21:54:56.910Z"
+      "syncedAt": "2026-11-07T11:37:23.363Z"
     },
     "wibring": {
       "riotId": "My Ballzac#EUW",
@@ -816,45 +788,80 @@
     "walther": {
       "riotId": "Tussen#666",
       "platform": "euw1",
-      "level": 348,
+      "level": 375,
       "profileIcon": 23,
       "rank": {
         "tier": "SILVER",
-        "division": "I",
-        "lp": 18,
-        "wins": 31,
-        "losses": 26,
+        "division": "II",
+        "lp": 3,
+        "wins": 40,
+        "losses": 42,
         "queue": "SOLO"
       },
       "topChamps": [
         {
           "key": "Samira",
           "name": "Samira",
-          "masteryPoints": 198120,
-          "masteryLevel": 21,
+          "masteryPoints": 229507,
+          "masteryLevel": 23,
           "recent": {
-            "games": 1,
-            "wins": 1
+            "games": 7,
+            "wins": 2
           }
         },
         {
           "key": "Amumu",
           "name": "Amumu",
-          "masteryPoints": 148077,
-          "masteryLevel": 16,
-          "recent": {
-            "games": 4,
-            "wins": 3
-          }
+          "masteryPoints": 156121,
+          "masteryLevel": 17
         },
         {
           "key": "Kayn",
           "name": "Kayn",
-          "masteryPoints": 145351,
-          "masteryLevel": 14
+          "masteryPoints": 153406,
+          "masteryLevel": 16,
+          "recent": {
+            "games": 1,
+            "wins": 0
+          }
         }
       ],
-      "syncedAt": "2026-08-07T21:57:10.945Z"
+      "syncedAt": "2026-11-07T11:41:22.876Z"
+    },
+    "martin": {
+      "riotId": "Palmknugen #EUW",
+      "platform": "euw1",
+      "level": 374,
+      "profileIcon": 7337,
+      "rank": {
+        "tier": "EMERALD",
+        "division": "IV",
+        "lp": 53,
+        "wins": 62,
+        "losses": 52,
+        "queue": "SOLO"
+      },
+      "topChamps": [
+        {
+          "key": "Zed",
+          "name": "Zed",
+          "masteryPoints": 777402,
+          "masteryLevel": 72
+        },
+        {
+          "key": "Talon",
+          "name": "Talon",
+          "masteryPoints": 169339,
+          "masteryLevel": 18
+        },
+        {
+          "key": "Gangplank",
+          "name": "Gangplank",
+          "masteryPoints": 154460,
+          "masteryLevel": 17
+        }
+      ],
+      "syncedAt": "2026-11-07T12:49:20.154Z"
     }
   }
 }

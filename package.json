@@ -9,10 +9,13 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "sync-stats": "node scripts/sync-stats.mjs",
-    "verify": "npm run verify-randomizer && npm run verify-ranks",
+    "verify": "npm run verify-randomizer && npm run verify-ranks && npm run verify-tournament && npm run verify-league",
+    "verify-tournament": "esbuild src/tournament/engine.ts --bundle --format=esm --outfile=tmp/tournament.mjs --log-level=error && esbuild src/tournament/storage.ts --bundle --format=esm --outfile=tmp/tournament-storage.mjs --log-level=error && node scripts/verify-tournament.mjs",
     "verify-randomizer": "esbuild src/lib/randomize.ts --bundle --format=esm --outfile=tmp/randomize.mjs --log-level=error && node scripts/verify-randomizer.mjs",
     "verify-ranks": "esbuild src/lib/stats.ts --bundle --format=esm --outfile=tmp/stats.mjs --log-level=error && node scripts/verify-ranks.mjs",
-    "preview-odds": "esbuild src/lib/stats.ts --bundle --format=esm --outfile=tmp/stats.mjs --log-level=error && node scripts/preview-odds.mjs"
+    "preview-odds": "esbuild src/lib/stats.ts --bundle --format=esm --outfile=tmp/stats.mjs --log-level=error && node scripts/preview-odds.mjs",
+    "verify-league": "esbuild src/league/engine.ts --bundle --format=esm --outfile=tmp/league.mjs --log-level=error && node scripts/verify-league.mjs",
+    "deploy": "node scripts/deploy.mjs"
   },
   "dependencies": {
     "framer-motion": "^11.11.17",
