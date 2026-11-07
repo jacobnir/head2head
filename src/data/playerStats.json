@@ -829,7 +829,7 @@
       "syncedAt": "2026-11-07T11:41:22.876Z"
     },
     "martin": {
-      "riotId": "Palmknugen #EUW",
+      "riotId": "Palmknugen#EUW",
       "platform": "euw1",
       "level": 374,
       "profileIcon": 7337,
@@ -846,7 +846,11 @@
           "key": "Zed",
           "name": "Zed",
           "masteryPoints": 777402,
-          "masteryLevel": 72
+          "masteryLevel": 72,
+          "recent": {
+            "games": 14,
+            "wins": 8
+          }
         },
         {
           "key": "Talon",
@@ -861,7 +865,7 @@
           "masteryLevel": 17
         }
       ],
-      "syncedAt": "2026-11-07T12:49:20.154Z"
+      "syncedAt": "2026-11-07T13:12:20.218Z"
     }
   }
 }

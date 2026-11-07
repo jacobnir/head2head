@@ -1,4 +1,5 @@
 import raw from '../data/playerStats.json'
+import { ROSTER } from '../roster'
 import type { ChampStat, Matchup, Player, PlayerStats, RankInfo, StatsFile } from '../types'
 
 /**
@@ -29,8 +30,13 @@ export const RANKS_UPDATED = 'inhouse:ranks-updated'
 export function applyLiveRanks(ranks: Record<string, RankInfo | null>): number {
   let changed = 0
   for (const [id, rank] of Object.entries(ranks)) {
-    const p = FILE.players[id]
-    if (!p) continue
+    let p = FILE.players[id]
+    if (!p) {
+      // Someone added on the live site: no synced champions yet, but they can have a rank.
+      const player = ROSTER.find((x) => x.id === id)
+      if (!player?.riotId) continue
+      p = FILE.players[id] = { riotId: player.riotId, platform: player.platform ?? 'euw1', topChamps: [], syncedAt: new Date().toISOString() }
+    }
     if (JSON.stringify(p.rank ?? null) !== JSON.stringify(rank)) changed++
     if (rank) p.rank = rank
     else delete p.rank

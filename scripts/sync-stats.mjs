@@ -21,6 +21,7 @@
  *   --force         ignore the local match cache
  *   --only=a,b      sync just these player ids, MERGING into the existing stats file
  *                   (used by the Add Player button — must not wipe everyone else)
+ *   --no-live       don't pull in players added on the hosted site
  */
 
 import { mkdir, readFile, writeFile, readdir } from 'node:fs/promises'
@@ -47,6 +48,10 @@ const MATCH_COUNT = Number(args.find((a) => a.startsWith('--matches='))?.split('
  * manual `npm run sync-stats`.
  */
 const MERGE = args.includes('--merge')
+
+/** Players added on the hosted site are synced too, unless --no-live. */
+const NO_LIVE = args.includes('--no-live')
+const LIVE_URL = process.env.INHOUSE_URL ?? 'https://in-house-three.vercel.app'
 
 /** --only=jacob,emil → sync just those, and merge rather than overwrite. */
 const ONLY = (args.find((a) => a.startsWith('--only='))?.split('=')[1] ?? '')
@@ -200,10 +205,28 @@ async function loadTs(relPath) {
   return import(`data:text/javascript;base64,${Buffer.from(code).toString('base64')}`)
 }
 
-/** roster.ts pulls in customPlayers.json, so UI-added players sync like any other. */
+/**
+ * roster.ts pulls in customPlayers.json, so UI-added players sync like any other. Players
+ * added on the hosted site (Vercel Blob, behind /api/players) are pulled in too, so their
+ * champions and win rates land in playerStats.json and ship with the next deploy.
+ * Best-effort: if the live site can't be reached, the local roster is still a full sync.
+ */
 async function loadRoster() {
   const mod = await loadTs('src/roster.ts')
-  return mod.ROSTER
+  const roster = mod.ROSTER
+  if (NO_LIVE) return roster
+  try {
+    const res = await fetch(`${LIVE_URL}/api/players`, { signal: AbortSignal.timeout(8000) })
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const { players = [] } = await res.json()
+    const known = new Set(roster.map((p) => p.id))
+    const live = players.filter((p) => !known.has(p.id))
+    if (live.length) console.log(`   + ${live.length} added on the live site: ${live.map((p) => p.name).join(', ')}`)
+    return [...roster, ...live]
+  } catch (e) {
+    console.log(`   (live-site players skipped: ${e.message})`)
+    return roster
+  }
 }
 
 /* ── match-history crawl (for champion win rates) ───────────── */

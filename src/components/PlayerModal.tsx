@@ -1,9 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { checkRiotId, slugify } from '../lib/riotId'
-import { isCustom, PLACEHOLDER_FACE, ROSTER } from '../roster'
+import { isCustom, PLACEHOLDER_FACE, removeLivePlayer, ROSTER, upsertLivePlayer } from '../roster'
 import { tick } from '../lib/audio'
-import type { Player } from '../types'
+import { applyLiveRanks } from '../lib/stats'
+import { siteCode } from './SiteGate'
+import type { Player, RankInfo } from '../types'
 
 type Props = {
   /** null = closed. A Player = edit them. 'new' = add someone. */
@@ -41,6 +43,32 @@ function readImage(file: File): Promise<string> {
     }
     reader.readAsDataURL(file)
   })
+}
+
+const NEEDS_DEV = 'Editing the roster needs the dev server — run `npm run dev`'
+
+/**
+ * Two backends, same form. `npm run dev` writes the roster files through the Vite plugin
+ * (/api/roster). The hosted copy writes live-added players to Vercel Blob through a
+ * function (/api/players), which wants the site code.
+ */
+const HOSTED = import.meta.env.PROD
+const ENDPOINT = HOSTED ? '/api/players' : '/api/roster'
+const requestHeaders = () => ({
+  'Content-Type': 'application/json',
+  // Header values must be ASCII; the code has an å in it.
+  ...(HOSTED ? { 'x-site-code': encodeURIComponent(siteCode()) } : {}),
+})
+
+type RosterResponse = { error?: string; syncNote?: string; hidden?: boolean; player?: Player; rank?: RankInfo | null; note?: string }
+
+/**
+ * A missing endpoint still answers, just with a 404 page rather than JSON, so check the
+ * content type instead of letting "Unexpected token 'T'…" reach the user.
+ */
+async function readRosterResponse(res: Response): Promise<RosterResponse> {
+  if (!res.headers.get('content-type')?.includes('json')) throw new Error(NEEDS_DEV)
+  return res.json()
 }
 
 export function PlayerModal({ target, onClose, onSaved }: Props) {
@@ -107,9 +135,9 @@ export function PlayerModal({ target, onClose, onSaved }: Props) {
     setError(null)
 
     try {
-      const res = await fetch('/api/roster', {
+      const res = await fetch(ENDPOINT, {
         method: editing ? 'PUT' : 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: requestHeaders(),
         body: JSON.stringify({
           id,
           name: name.trim(),
@@ -121,16 +149,21 @@ export function PlayerModal({ target, onClose, onSaved }: Props) {
         }),
       })
 
-      const data = await res.json()
+      const data = await readRosterResponse(res)
       if (!res.ok) throw new Error(data.error ?? 'Could not save')
 
+      if (HOSTED && data.player) {
+        upsertLivePlayer(data.player)
+        if (data.rank !== undefined) applyLiveRanks({ [data.player.id]: data.rank })
+        return onSaved(data.note ?? null)
+      }
       onSaved(data.syncNote ?? null)
     } catch (e) {
       const msg = e instanceof Error ? e.message : 'Could not save'
       // The API only exists under `npm run dev` — say so rather than failing cryptically.
       setError(
         msg.includes('Failed to fetch') || msg.includes('NetworkError')
-          ? 'Editing the roster needs the dev server — run `npm run dev`'
+          ? NEEDS_DEV
           : msg,
       )
       setBusy(false)
@@ -149,13 +182,18 @@ export function PlayerModal({ target, onClose, onSaved }: Props) {
     setBusy(true)
     setError(null)
     try {
-      const res = await fetch('/api/roster', {
+      const res = await fetch(ENDPOINT, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: requestHeaders(),
         body: JSON.stringify({ id: player.id }),
       })
-      const data = await res.json()
+      const data = await readRosterResponse(res)
       if (!res.ok) throw new Error(data.error ?? 'Could not delete')
+
+      if (HOSTED) {
+        removeLivePlayer(player.id)
+        return onSaved(null)
+      }
 
       onSaved(
         data.hidden
@@ -166,7 +204,7 @@ export function PlayerModal({ target, onClose, onSaved }: Props) {
       const msg = e instanceof Error ? e.message : 'Could not delete'
       setError(
         msg.includes('Failed to fetch') || msg.includes('NetworkError')
-          ? 'Editing the roster needs the dev server — run `npm run dev`'
+          ? NEEDS_DEV
           : msg,
       )
       setBusy(false)
@@ -178,7 +216,8 @@ export function PlayerModal({ target, onClose, onSaved }: Props) {
   const hadRiotId = Boolean(player?.riotId)
   const clearingRiotId = editing && hadRiotId && !riotId.trim()
   // Only UI-added players can actually be removed; built-ins get hidden.
-  const isRemovable = editing && isCustom(player!.id)
+  // Hosted: only live-added players are editable at all, and those delete for real.
+  const isRemovable = editing && (HOSTED || isCustom(player!.id))
 
   return (
     <AnimatePresence>

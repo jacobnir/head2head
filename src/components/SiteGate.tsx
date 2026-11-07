@@ -2,6 +2,8 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 
 const EXPECTED = import.meta.env.VITE_SITE_CODE_SHA256?.trim().toLowerCase()
 const UNLOCK_KEY = 'fightnight.unlocked'
+/** The code itself, so /api/players can check it. The bundle only ever has the hash. */
+const CODE_KEY = 'fightnight.code'
 
 /**
  * Phones capitalise the first letter, and some keyboards type "å" as a + combining ring
@@ -15,14 +17,21 @@ async function sha256(text: string) {
   return [...bytes].map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 
+/** The entered code, for API writes. Empty when the build has no gate. */
+export function siteCode(): string {
+  try { return localStorage.getItem(CODE_KEY) ?? '' } catch { return '' }
+}
+
+// Visitors from before the code was remembered have the unlock flag but no code: ask once
+// more, otherwise their first "add player" would fail with a wrong-code error.
 function remembered() {
-  try { return localStorage.getItem(UNLOCK_KEY) === EXPECTED } catch { return false }
+  try { return localStorage.getItem(UNLOCK_KEY) === EXPECTED && Boolean(localStorage.getItem(CODE_KEY)) } catch { return false }
 }
 
 /**
- * Keeps randoms off the hosted copy. It's a speed bump, not security: a static site
- * ships everything to the browser, so anyone determined can read the files directly.
- * Only the code's hash is in the bundle, never the code itself.
+ * Keeps randoms off the hosted copy. On its own it's a speed bump: a static site ships
+ * everything to the browser. What it really guards is /api/players, which re-checks the
+ * code server-side before anyone can change the live roster.
  */
 export function SiteGate({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(() => !EXPECTED || remembered())
@@ -32,8 +41,12 @@ export function SiteGate({ children }: { children: ReactNode }) {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault()
-    if (await sha256(normaliseCode(code)) === EXPECTED) {
-      try { localStorage.setItem(UNLOCK_KEY, EXPECTED!) } catch { /* still let them in this visit */ }
+    const normalised = normaliseCode(code)
+    if (await sha256(normalised) === EXPECTED) {
+      try {
+        localStorage.setItem(UNLOCK_KEY, EXPECTED!)
+        localStorage.setItem(CODE_KEY, normalised)
+      } catch { /* still let them in this visit */ }
       setOpen(true)
     } else setWrong(true)
   }

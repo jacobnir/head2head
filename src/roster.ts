@@ -121,6 +121,51 @@ export function isCustom(id: string): boolean {
   return CUSTOM.some((p) => p.id === id)
 }
 
+/* ── Live-added players (hosted site only) ─────────────────── */
+
+/**
+ * The hosted copy can't write files, so players added there live in Vercel Blob behind
+ * /api/players (see api/players.js). They're merged into ROSTER in place, before the app
+ * first renders, so every screen that reads ROSTER just sees them. Built-ins always win
+ * an id collision; the server refuses those anyway.
+ */
+const LIVE = new Set<string>()
+
+export function isLive(id: string): boolean {
+  return LIVE.has(id)
+}
+
+export function upsertLivePlayer(p: Player): void {
+  const player: Player = { id: p.id, name: p.name, nickname: p.nickname, img: p.img || PLACEHOLDER_FACE, riotId: p.riotId, platform: p.platform }
+  const at = ROSTER.findIndex((x) => x.id === p.id)
+  if (at >= 0 && !LIVE.has(p.id)) return
+  LIVE.add(p.id)
+  if (at >= 0) ROSTER[at] = player
+  else ROSTER.push(player)
+}
+
+export function removeLivePlayer(id: string): void {
+  if (!LIVE.delete(id)) return
+  const at = ROSTER.findIndex((x) => x.id === id)
+  if (at >= 0) ROSTER.splice(at, 1)
+}
+
+/** Fails quietly: the built-in roster is always a working roster. */
+export async function loadLivePlayers(timeoutMs = 3000): Promise<void> {
+  const controller = new AbortController()
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    const res = await fetch('/api/players', { signal: controller.signal })
+    if (!res.ok || !res.headers.get('content-type')?.includes('json')) return
+    const body = (await res.json()) as { players?: Player[] }
+    for (const p of body.players ?? []) upsertLivePlayer(p)
+  } catch {
+    // Built-ins only, then.
+  } finally {
+    window.clearTimeout(timer)
+  }
+}
+
 /** Used for anyone without a nickname, and for the extra stamped tag on the fight card. */
 export const HYPE_TAGS = [
   'MID DIFF ENJOYER',
