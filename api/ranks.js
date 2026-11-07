@@ -5,9 +5,8 @@
  * (RIOT_API_KEY); the browser only ever sees ranks, never the key. Riot's policy forbids
  * shipping a key to the client, and anything in the page bundle is public.
  *
- * Who to look up comes from `_players.js`, generated at deploy time from the Riot IDs the
- * sync already resolved and cleaned (see scripts/deploy.mjs). So no tag guessing or
- * invisible-Unicode scrubbing is needed here.
+ * Who to look up: the Riot IDs the sync already resolved and cleaned (`_players.js`,
+ * generated at deploy), plus anyone added on the live site (`_store.js`).
  *
  * The response is cached at Vercel's edge for 10 minutes and served stale while it
  * refreshes, so Riot sees at most one refresh per 10 minutes however many people load
@@ -17,55 +16,50 @@
  * build. `null` means "fetched, and genuinely unranked right now".
  */
 import { PLAYERS } from './_players.js'
+import { RateLimited, rankFor } from './_riot.js'
+import { readPlayers } from './_store.js'
 
-const REGIONAL = { euw1: 'europe', eun1: 'europe', tr1: 'europe', ru: 'europe', na1: 'americas', br1: 'americas', la1: 'americas', la2: 'americas', kr: 'asia', jp1: 'asia' }
 const BATCH = 5 // players in flight at once: 10 calls, comfortably under 20/s
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
-// PUUIDs never change for a given key, so a warm instance skips the account lookup.
-const puuidCache = new Map()
-
-class RateLimited extends Error {}
-
-async function riot(url, key) {
-  const res = await fetch(url, { headers: { 'X-Riot-Token': key } })
-  if (res.status === 429) throw new RateLimited('rate limited')
-  if (res.status === 404) return null
-  if (!res.ok) throw new Error(`Riot ${res.status}`)
-  return res.json()
+async function livePlayers() {
+  const known = new Set(PLAYERS.map((p) => p.id))
+  return (await readPlayers()).filter((p) => p.riotId && !known.has(p.id))
+    .map(({ id, riotId, platform }) => ({ id, riotId, platform }))
 }
 
-async function rankFor(player, key) {
-  const platform = player.platform || 'euw1'
-  let puuid = puuidCache.get(player.riotId)
-  if (!puuid) {
-    const [gameName, tagLine] = player.riotId.split('#')
-    const account = await riot(`https://${REGIONAL[platform] ?? 'europe'}.api.riotgames.com/riot/account/v1/accounts/by-riot-id/` +
-      `${encodeURIComponent(gameName)}/${encodeURIComponent(tagLine)}`, key)
-    if (!account) return undefined // renamed or wrong tag: keep the baked rank
-    puuid = account.puuid
-    puuidCache.set(player.riotId, puuid)
+async function everyone() {
+  try {
+    return [...PLAYERS, ...await livePlayers()]
+  } catch {
+    return PLAYERS // Blob trouble must not take the built-in roster's ranks down with it
   }
-  const entries = (await riot(`https://${platform}.api.riotgames.com/lol/league/v4/entries/by-puuid/${puuid}`, key)) ?? []
-  // Same rule as the sync: solo/duo first, flex for people who don't queue solo.
-  const solo = entries.find((e) => e.queueType === 'RANKED_SOLO_5x5')
-  const entry = solo ?? entries.find((e) => e.queueType === 'RANKED_FLEX_SR')
-  if (!entry) return null
-  return { tier: entry.tier, division: entry.rank, lp: entry.leaguePoints, wins: entry.wins, losses: entry.losses, queue: solo ? 'SOLO' : 'FLEX' }
 }
 
-export default async function handler(_req, res) {
+/**
+ * `?ids=a,b`: just those live-added players, on a short cache. The full list is cached for
+ * 10 minutes, so someone added a minute ago isn't in it yet; the page asks for them here.
+ * Only live-added ids are honoured, at most 10, so this can't be used to hammer Riot.
+ */
+async function requested(ids) {
+  const wanted = new Set(String(ids).split(',').map((s) => s.trim()).filter(Boolean).slice(0, 10))
+  return (await livePlayers()).filter((p) => wanted.has(p.id))
+}
+
+export default async function handler(req, res) {
   const key = process.env.RIOT_API_KEY?.trim()
   if (!key) {
     res.setHeader('Cache-Control', 'no-store')
     return res.status(503).json({ error: 'RIOT_API_KEY is not set on this deployment.' })
   }
 
+  const subset = req.query?.ids !== undefined
+  const players = subset ? await requested(req.query.ids) : await everyone()
   const ranks = {}
   let failures = 0
   let rateLimited = false
-  for (let i = 0; i < PLAYERS.length && !rateLimited; i += BATCH) {
-    await Promise.all(PLAYERS.slice(i, i + BATCH).map(async (p) => {
+  for (let i = 0; i < players.length && !rateLimited; i += BATCH) {
+    await Promise.all(players.slice(i, i + BATCH).map(async (p) => {
       try {
         const rank = await rankFor(p, key)
         if (rank !== undefined) ranks[p.id] = rank
@@ -74,10 +68,15 @@ export default async function handler(_req, res) {
         if (e instanceof RateLimited) rateLimited = true
       }
     }))
-    if (i + BATCH < PLAYERS.length) await sleep(600)
+    if (i + BATCH < players.length) await sleep(600)
   }
 
   const fetched = Object.keys(ranks).length
+  if (subset) {
+    // Unranked newcomers are a valid empty answer, not a failure.
+    res.setHeader('Cache-Control', failures ? 'no-store' : 's-maxage=120, stale-while-revalidate=600')
+    return res.status(200).json({ fetchedAt: new Date().toISOString(), ranks, failures, rateLimited })
+  }
   // A bad key or total outage: don't cache the failure for 10 minutes.
   res.setHeader('Cache-Control', fetched ? 's-maxage=600, stale-while-revalidate=3000' : 'no-store')
   res.status(fetched ? 200 : 502).json({ fetchedAt: new Date().toISOString(), ranks, failures, rateLimited })

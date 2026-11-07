@@ -48,6 +48,9 @@ export function peekTrimmed(src: string): string | undefined {
 function load(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image()
+    // Live-added faces are served from Vercel Blob, another origin. Without CORS the
+    // canvas is tainted and can't be read, so ask for it (Blob allows any origin).
+    if (new URL(src, location.href).origin !== location.origin) img.crossOrigin = 'anonymous'
     img.onload = () => resolve(img)
     img.onerror = () => reject(new Error(`failed to load ${src}`))
     img.src = src

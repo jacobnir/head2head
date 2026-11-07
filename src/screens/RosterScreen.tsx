@@ -6,7 +6,15 @@ import { RankBadge } from '../components/RankBadge'
 import { tick } from '../lib/audio'
 import { REQUIRED_PLAYERS } from '../lib/randomize'
 import { statsFor } from '../lib/stats'
-import { HIDDEN, ROSTER } from '../roster'
+import { HIDDEN, isLive, ROSTER } from '../roster'
+
+/**
+ * Locally, roster edits write files through the dev server's /api/roster
+ * (vite-plugins/roster-api.mjs), so anyone can be edited. On the hosted copy, players
+ * can be added through /api/players, but only those live-added players can be edited:
+ * built-ins are files in the repo, and the host's laptop is where those change.
+ */
+const canEdit = (p: Player) => import.meta.env.DEV || isLive(p.id)
 import type { Player } from '../types'
 
 type Props = {
@@ -25,11 +33,15 @@ export function RosterScreen({ selected, onToggle, onFight, onTournament, onLeag
   const count = selected.length
   const ready = count === REQUIRED_PLAYERS
 
-  // The dev server rewrote customPlayers/playerOverrides/playerStats on disk. Vite would
-  // HMR us anyway; a reload is the simplest way to be sure we're on the new roster.
   const onSaved = (note: string | null) => {
     if (note) window.alert(note)
-    window.location.reload()
+    // Dev: the server rewrote customPlayers/playerOverrides/playerStats on disk. Vite would
+    // HMR us anyway; a reload is the simplest way to be sure we're on the new roster.
+    if (import.meta.env.DEV) return window.location.reload()
+    // Hosted: the modal already patched ROSTER in place (a reload could hit the API's
+    // short edge cache and briefly miss the change). Drop picks of anyone just deleted.
+    for (const id of selected) if (!ROSTER.some((p) => p.id === id)) onToggle(id)
+    setEditing(null)
   }
 
   const handleToggle = (id: string) => {
@@ -103,15 +115,17 @@ export function RosterScreen({ selected, onToggle, onFight, onTournament, onLeag
                 )}
               </button>
 
-              <button
-                className="edit-btn"
-                onClick={() => setEditing(p)}
-                type="button"
-                title={`Edit ${p.name}`}
-                aria-label={`Edit ${p.name}`}
-              >
-                ✎
-              </button>
+              {canEdit(p) && (
+                <button
+                  className="edit-btn"
+                  onClick={() => setEditing(p)}
+                  type="button"
+                  title={`Edit ${p.name}`}
+                  aria-label={`Edit ${p.name}`}
+                >
+                  ✎
+                </button>
+              )}
             </div>
           )
         })}
@@ -129,7 +143,7 @@ export function RosterScreen({ selected, onToggle, onFight, onTournament, onLeag
       </div>
 
       {/* Hiding a built-in must not be a one-way door — bring them back from here. */}
-      {HIDDEN.length > 0 && (
+      {import.meta.env.DEV && HIDDEN.length > 0 && (
         <div className="hidden-strip">
           <span className="hidden-label">HIDDEN</span>
           {HIDDEN.map((p) => (

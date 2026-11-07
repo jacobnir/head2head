@@ -51,6 +51,14 @@ the repo, so `.env` can't leak; the script also aborts if anything contains `RGA
   as synced. The browser still never talks to Riot or sees the key.
 - **Code gate:** `src/components/SiteGate.tsx`. The SHA-256 of the normalised code lives
   in `.env.production.local` (gitignored, production builds only). Dev has no gate.
+- **Live-added players:** `api/players.js` lets the hosted site add/edit/delete players,
+  stored in the Vercel Blob store `in-house-players` (`api/_store.js`; one JSON per save,
+  newest wins, because public blob URLs are CDN-cached). Writes need the site code in
+  `x-site-code`, checked against the hash the deploy bakes into `api/_config.js`, along
+  with the built-in ids, which are read-only there. The hosted build merges them into
+  `ROSTER` before first render (`loadLivePlayers` in `roster.ts`); built-ins stay
+  edit-only under `npm run dev`. `sync-stats` pulls them in (`--no-live` to skip) so their
+  champions ship with the next deploy.
 - Leagues and tournaments are per-browser localStorage, also on the hosted copy.
 
 
