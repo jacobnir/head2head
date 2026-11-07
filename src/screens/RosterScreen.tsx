@@ -13,9 +13,11 @@ type Props = {
   selected: string[]
   onToggle: (id: string) => void
   onFight: (players: Player[]) => void
+  onTournament?: () => void
+  onLeague?: () => void
 }
 
-export function RosterScreen({ selected, onToggle, onFight }: Props) {
+export function RosterScreen({ selected, onToggle, onFight, onTournament, onLeague }: Props) {
   const [rejected, setRejected] = useState(false)
   /** null = modal closed, 'new' = adding, a Player = editing them. */
   const [editing, setEditing] = useState<Player | 'new' | null>(null)
@@ -63,10 +65,14 @@ export function RosterScreen({ selected, onToggle, onFight }: Props) {
     <div className="screen roster-screen">
       <header className="roster-header">
         <h1 className="title">
-          <span className="title-fight">FIGHT</span>
-          <span className="title-night">NIGHT</span>
+          <span className="title-fight">IN</span>
+          <span className="title-night">HOUSE</span>
         </h1>
         <p className="subtitle">SELECT YOUR TEN COMBATANTS</p>
+        <div className="mode-entries">
+          {onLeague && <button className="tournament-entry" onClick={onLeague} type="button">★ POINTS LEAGUE <span>→</span></button>}
+          {onTournament && <button className="tournament-entry" onClick={onTournament} type="button">♛ TOURNAMENT MODE <span>→</span></button>}
+        </div>
       </header>
 
       <div className="roster-grid">
@@ -154,7 +160,7 @@ export function RosterScreen({ selected, onToggle, onFight }: Props) {
 
         <button className="fight-btn" disabled={!ready} onClick={handleFight} type="button">
           <span className="fight-btn-inner">
-            {ready ? 'FIGHT NIGHT' : `NEED ${REQUIRED_PLAYERS - count} MORE`}
+            {ready ? 'LET’S ROLL' : `NEED ${REQUIRED_PLAYERS - count} MORE`}
           </span>
         </button>
       </footer>

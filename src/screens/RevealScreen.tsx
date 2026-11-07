@@ -7,9 +7,10 @@ import { LaneReveal } from './LaneReveal'
 type Props = {
   result: MatchResult
   onDone: () => void
+  contextLabel?: string
 }
 
-export function RevealScreen({ result, onDone }: Props) {
+export function RevealScreen({ result, onDone, contextLabel }: Props) {
   const [index, setIndex] = useState(0)
   const [advanceSignal, setAdvanceSignal] = useState(0)
   const total = result.matchups.length
@@ -60,6 +61,7 @@ export function RevealScreen({ result, onDone }: Props) {
 
   return (
     <div className="screen reveal-screen" onClick={advance}>
+      {contextLabel && <div className="tn-reveal-context">{contextLabel}</div>}
       <LaneReveal
         key={index}
         matchup={result.matchups[index]}

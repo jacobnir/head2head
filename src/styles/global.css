@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────
-   FIGHT NIGHT — boxing-poster grunge. Dark, loud, neon corners.
+   IN HOUSE — boxing-poster grunge. Dark, loud, neon corners.
    ───────────────────────────────────────────────────────────── */
 
 :root {
@@ -25,6 +25,41 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+/* One scrollbar for the whole app: thin gold thumb, no track, no arrow buttons.
+   Firefox only understands the standard properties. Chromium understands both, but
+   setting scrollbar-color there disables ::-webkit-scrollbar, so it's reset to auto. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 210, 63, 0.4) transparent;
+}
+@supports selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: auto;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background: transparent;
+  }
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 210, 63, 0.3);
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 210, 63, 0.6);
+  }
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
 }
 
 html,
@@ -66,6 +101,28 @@ body {
 }
 
 /* ── Roster ─────────────────────────────────────────────────── */
+
+.tournament-entry {
+  margin-top: 0.8rem;
+  border: 1px solid rgba(255, 210, 63, 0.4);
+  border-radius: 4px;
+  background: rgba(255, 210, 63, 0.08);
+  padding: 0.45rem 1rem;
+  color: var(--gold);
+  font: 0.85rem var(--font-slam);
+  letter-spacing: 0.13em;
+  cursor: pointer;
+}
+.tournament-entry span { margin-left: 1rem; }
+.site-gate { display: grid; place-items: center; height: 100%; padding: 16px; }
+.site-gate form { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; width: min(100%, 360px); }
+.site-gate label { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; color: #c4c0c9; font-size: 0.8rem; letter-spacing: 0.15em; text-align: center; }
+.site-gate input { padding: 0.8rem; border-radius: 6px; border: 1px solid #41404b; background: #11111a; color: #ede9e1; font: inherit; font-size: 1.2rem; text-align: center; letter-spacing: 0.2em; }
+.site-gate p { color: #ffaea3; margin: 0; }
+.mode-entries { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 0.8rem; }
+.tournament-entry:hover { background: rgba(255, 210, 63, 0.18); }
+.tournament-entry:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.tournament-loading { display: grid; place-items: center; height: 100%; color: var(--gold); }
 
 .roster-screen {
   padding: 2.5vh 3vw 0;
@@ -678,6 +735,8 @@ select.input {
   flex-direction: column;
   align-items: center;
   padding: 2vh 2vw;
+  /* Room for the pinned advance-prompt + skip-hint, so they never land on the odds board. */
+  padding-bottom: 80px;
 }
 
 .lane-banner {
@@ -1620,8 +1679,12 @@ select.input {
 .advance-prompt {
   position: absolute;
   bottom: 44px;
-  left: 50%;
-  transform: translateX(-50%);
+  /* Centred with left/right, not translateX: framer-motion owns `transform` here (it
+     animates y), and would silently drop the -50% and shove the text off-centre. */
+  left: 0;
+  right: 0;
+  text-align: center;
+  pointer-events: none;
   z-index: 40;
   font-family: var(--font-slam);
   font-size: clamp(0.85rem, 1.6vw, 1.15rem);

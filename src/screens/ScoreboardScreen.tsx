@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { Face } from '../components/Face'
 import { RankBadge } from '../components/RankBadge'
 import { airhorn, bell } from '../lib/audio'
@@ -11,8 +11,13 @@ import type { MatchResult, Matchup, Player, Team } from '../types'
 
 type Props = {
   result: MatchResult
-  onReroll: () => void
+  onReroll?: () => void
   onBack: () => void
+  title?: string
+  subtitle?: string
+  blueLabel?: string
+  redLabel?: string
+  footer?: ReactNode
 }
 
 const CURSE_BADGE: Record<string, string> = {
@@ -81,7 +86,7 @@ function LaneChanceBar({ matchup }: { matchup: Matchup }) {
   )
 }
 
-export function ScoreboardScreen({ result, onReroll, onBack }: Props) {
+export function ScoreboardScreen({ result, onReroll, onBack, title, subtitle, blueLabel, redLabel, footer }: Props) {
   const team = teamWinChance(result.matchups)
 
   useEffect(() => {
@@ -99,11 +104,12 @@ export function ScoreboardScreen({ result, onReroll, onBack }: Props) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 200, damping: 20 }}
       >
-        <h1 className="card-title">TONIGHT&rsquo;S FIGHT CARD</h1>
+        <h1 className="card-title">{title ?? <>TONIGHT&rsquo;S FIGHT CARD</>}</h1>
+        {subtitle && <p className="tn-note">{subtitle}</p>}
         <div className="card-teams">
-          <span className="team-tag blue">BLUE SIDE</span>
+          <span className="team-tag blue">{blueLabel ?? 'BLUE SIDE'}</span>
           <span className="card-vs">VS</span>
-          <span className="team-tag red">RED SIDE</span>
+          <span className="team-tag red">{redLabel ?? 'RED SIDE'}</span>
         </div>
       </motion.header>
 
@@ -137,12 +143,18 @@ export function ScoreboardScreen({ result, onReroll, onBack }: Props) {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.7 }}
       >
-        <button className="btn ghost" onClick={onBack} type="button">
-          ← ROSTER
-        </button>
-        <button className="btn primary" onClick={onReroll} type="button">
-          REROLL 🎲
-        </button>
+        {footer ?? (
+          <>
+            <button className="btn ghost" onClick={onBack} type="button">
+              ← ROSTER
+            </button>
+            {onReroll && (
+              <button className="btn primary" onClick={onReroll} type="button">
+                REROLL 🎲
+              </button>
+            )}
+          </>
+        )}
       </motion.footer>
     </div>
   )

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import type { Lane } from '../types'
 
-const LANE_ICON: Record<Lane, string> = {
+export const LANE_ICON: Record<Lane, string> = {
   TOP: '⚔️',
   JUNGLE: '🌳',
   MID: '🔮',

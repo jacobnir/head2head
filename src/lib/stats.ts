@@ -12,7 +12,50 @@ const FILE = raw as StatsFile
 const DDRAGON_VERSION = FILE.ddragonVersion ?? '15.1.1'
 
 export function statsFor(player: Player): PlayerStats | undefined {
+  if ('statsSnapshot' in player) return player.statsSnapshot ?? undefined
   return FILE.players[player.id]
+}
+
+/* ── Live ranks (hosted site only) ─────────────────────────── */
+
+export const RANKS_UPDATED = 'inhouse:ranks-updated'
+
+/**
+ * Overlay fresh ranks from /api/ranks onto the baked file. Champions, mastery and win
+ * rates stay as synced; only rank moves. A player absent from `ranks` keeps their baked
+ * rank; `null` means the API saw them and they're unranked now. Tournament snapshots
+ * (statsSnapshot) are frozen by design and never touched.
+ */
+export function applyLiveRanks(ranks: Record<string, RankInfo | null>): number {
+  let changed = 0
+  for (const [id, rank] of Object.entries(ranks)) {
+    const p = FILE.players[id]
+    if (!p) continue
+    if (JSON.stringify(p.rank ?? null) !== JSON.stringify(rank)) changed++
+    if (rank) p.rank = rank
+    else delete p.rank
+  }
+  if (changed) window.dispatchEvent(new Event(RANKS_UPDATED))
+  return changed
+}
+
+/**
+ * Ask the hosted site's function for live ranks. Fails quietly (dev server, offline,
+ * no key configured): the baked ranks are always a fine answer.
+ */
+export async function loadLiveRanks(timeoutMs = 8000): Promise<void> {
+  const controller = new AbortController()
+  const timer = window.setTimeout(() => controller.abort(), timeoutMs)
+  try {
+    const res = await fetch('/api/ranks', { signal: controller.signal })
+    if (!res.ok || !res.headers.get('content-type')?.includes('json')) return
+    const body = (await res.json()) as { ranks?: Record<string, RankInfo | null> }
+    if (body.ranks) applyLiveRanks(body.ranks)
+  } catch {
+    // Baked ranks it is.
+  } finally {
+    window.clearTimeout(timer)
+  }
 }
 
 export function hasLiveStats(): boolean {

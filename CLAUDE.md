@@ -13,7 +13,8 @@ npm run dev            # the app (localhost:5173). Kicks off a background stats 
                        # launch so ranks are fresh; Vite starts immediately regardless.
                        # `-- --no-sync` skips it, `-- --no-winrates` makes it fast.
 npm run build          # tsc -b && vite build
-npm run verify         # BOTH suites below — run this after touching randomize.ts or stats.ts
+npm run deploy         # build + ship the hosted copy to Vercel (see Hosted copy)
+npm run verify         # every suite below — run this after touching randomize.ts or stats.ts
 npm run sync-stats     # pull live Riot data -> src/data/playerStats.json
 npm run preview-odds   # print rank-derived odds + win chances for every possible bout
 ```
@@ -36,6 +37,22 @@ instead of dropping players), `--matches=N`, `--force`.
 The browser still **never** calls Riot at runtime — the auto-sync is a separate Node
 process (`scripts/dev.mjs`) that refreshes `playerStats.json`; the app only imports it.
 A total loss of connectivity fails the sync before it writes, leaving the file untouched.
+
+### Hosted copy (Vercel)
+
+`npm run deploy` (`scripts/deploy.mjs`) builds and ships a **staged folder** to the Vercel
+project `in-house`: the built site, `api/ranks.js` and a generated player list. Never
+the repo, so `.env` can't leak; the script also aborts if anything contains `RGAPI-`.
+
+- **Live ranks:** `api/ranks.js` is a serverless function holding `RIOT_API_KEY` (a Vercel
+  secret env var, NOT the local `.env`). It returns ranks only, edge-cached 10 min, so
+  Riot sees ≤1 refresh per 10 min. The production build calls it on load and overlays the
+  result via `applyLiveRanks` in `src/lib/stats.ts`; champions/mastery/win rates stay
+  as synced. The browser still never talks to Riot or sees the key.
+- **Code gate:** `src/components/SiteGate.tsx`. The SHA-256 of the normalised code lives
+  in `.env.production.local` (gitignored, production builds only). Dev has no gate.
+- Leagues and tournaments are per-browser localStorage, also on the hosted copy.
+
 
 ## Architecture
 
@@ -82,7 +99,7 @@ re-rendering the tree for each would be silly. `src/fx/particles.ts` is one shar
 loop over a fullscreen canvas that idles to zero cost when nothing is alive.
 
 All audio is synthesized in `src/lib/audio.ts` (Web Audio) — no files. The `AudioContext`
-can only start after a user gesture, which is the FIGHT NIGHT click.
+can only start after a user gesture, which is the LET’S ROLL click.
 
 ## Traps that have already bitten
 
